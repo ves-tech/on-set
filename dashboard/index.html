@@ -40,7 +40,11 @@
 
             <div class="sidebar-header">
                 <h2>Filters</h2>
-                <button id="reset-filters-btn" class="reset-btn" aria-label="Reset filters">Reset</button>
+                <div class="sidebar-actions">
+                    <button id="reset-filters-btn" class="reset-btn" aria-label="Reset filters">Reset</button>
+                    <button id="mobile-filter-close-btn" class="action-btn mobile-only"
+                        aria-label="Close filters">Apply</button>
+                </div>
             </div>
 
             <div id="filter-container">
@@ -80,6 +84,13 @@
             <header class="top-bar" id="specs-header">
                 <input type="text" id="search-input" placeholder="Search specs...">
                 <div class="stats" id="stats-display">Showing all items</div>
+                <button id="mobile-filter-btn" class="action-btn mobile-only hidden" aria-label="Filters">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                    </svg>
+                    <span style="margin-left: 8px;">Filters</span>
+                </button>
                 <button id="print-btn" class="action-btn" aria-label="Print">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

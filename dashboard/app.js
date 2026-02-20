@@ -45,7 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
         tabs: document.querySelectorAll('.tab-btn'),
         printBtn: document.getElementById('print-btn'),
         tooltip: document.getElementById('tooltip'),
-        resetBtn: document.getElementById('reset-filters-btn')
+        resetBtn: document.getElementById('reset-filters-btn'),
+        mobileFilterBtn: document.getElementById('mobile-filter-btn'),
+        mobileFilterCloseBtn: document.getElementById('mobile-filter-close-btn')
     };
 
     // Reset Filters Logic
@@ -60,6 +62,21 @@ document.addEventListener('DOMContentLoaded', () => {
             updateUrlParams();
             renderFilters(); // Re-renders checkboxes to unchecked state
             renderDataSetsGrid(); // Shows all items
+        });
+    }
+
+    // Mobile Filter Modal Logic
+    if (dom.mobileFilterBtn) {
+        dom.mobileFilterBtn.addEventListener('click', () => {
+            dom.sidebar.classList.add('modal-open');
+            document.body.classList.add('filter-modal-open');
+        });
+    }
+
+    if (dom.mobileFilterCloseBtn) {
+        dom.mobileFilterCloseBtn.addEventListener('click', () => {
+            dom.sidebar.classList.remove('modal-open');
+            document.body.classList.remove('filter-modal-open');
         });
     }
 
@@ -209,10 +226,12 @@ document.addEventListener('DOMContentLoaded', () => {
             dom.sidebar.classList.remove('hidden');
             dom.specsHeader.classList.remove('hidden');
             dom.filterContainer.classList.remove('hidden');
+            if (dom.mobileFilterBtn) dom.mobileFilterBtn.classList.remove('hidden');
             renderDataSetsGrid();
         } else {
             dom.sidebar.classList.add('hidden');
             dom.specsHeader.classList.add('hidden');
+            if (dom.mobileFilterBtn) dom.mobileFilterBtn.classList.add('hidden');
             renderSimpleView(tabName);
         }
     }
