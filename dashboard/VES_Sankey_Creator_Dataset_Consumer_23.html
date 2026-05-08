@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>VES On-Set Data — Creator → Dataset → Consumer</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://unpkg.com/d3-sankey@0.12.3/dist/d3-sankey.min.js"></script>
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --fg: #F0EDE8;
+    --muted: #888;
+    --gold: #DDA830;
+    --panel: #141414;
+    --border: #2a2a2a;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: Helvetica, Arial, sans-serif;
+  }
+  header {
+    padding: 14px 24px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  header .era {
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+  }
+  header h1 {
+    margin: 0 0 6px 0;
+    font-size: 20px;
+    font-weight: 700;
+    font-style: italic;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  header p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .about-toggle {
+    margin-left: 12px;
+    padding: 3px 10px;
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    border-radius: 999px;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: Helvetica, Arial, sans-serif;
+    transition: all .15s;
+  }
+  .about-toggle:hover {
+    background: var(--gold);
+    color: #000;
+  }
+  #about-panel {
+    background: #141414;
+    border-bottom: 1px solid var(--border);
+    padding: 18px 24px 24px;
+  }
+  #about-panel[hidden] { display: none; }
+  .about-inner {
+    max-width: 760px;
+  }
+  .about-inner h2 {
+    margin: 0 0 12px 0;
+    font-size: 16px;
+    font-weight: 700;
+    font-style: italic;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--fg);
+  }
+  .about-inner h3 {
+    margin: 18px 0 6px 0;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--gold);
+  }
+  .about-inner p {
+    margin: 0 0 10px 0;
+    font-size: 13px;
+    line-height: 1.55;
+    color: #cfc9bf;
+  }
+  .about-inner ul {
+    margin: 0 0 10px 0;
+    padding-left: 18px;
+    color: #cfc9bf;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  .about-inner li { margin-bottom: 4px; }
+  .about-inner strong { color: var(--fg); }
+  .about-inner code {
+    background: #1f1f1f;
+    padding: 1px 6px;
+    border-radius: 3px;
+    color: var(--gold);
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 12px;
+  }
+  #controls, #controls-type, #controls-side, #controls-density, #controls-zoom {
+    padding: 10px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    background: var(--panel);
+  }
+  #controls .label, #controls-type .label, #controls-side .label, #controls-density .label, #controls-zoom .label {
+    color: var(--muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-right: 8px;
+  }
+  .chip, .chip-type, .chip-side, .chip-density, .chip-zoom, .chip-essential {
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 11px;
+    color: var(--fg);
+    background: transparent;
+    cursor: pointer;
+    transition: all .15s;
+    user-select: none;
+  }
+  .chip-zoom {
+    min-width: 32px;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 2px 12px;
+  }
+  .chip:hover, .chip-type:hover, .chip-side:hover, .chip-density:hover, .chip-zoom:hover, .chip-essential:hover { border-color: var(--gold); }
+  .chip.active, .chip-type.active, .chip-side.active, .chip-density.active, .chip-essential.active {
+    background: var(--gold);
+    color: #000;
+    border-color: var(--gold);
+    font-weight: 600;
+  }
+  .chip .swatch {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 2px;
+    margin-right: 6px;
+    vertical-align: 1px;
+  }
+  #chart-container {
+    position: relative;
+  }
+  svg { display: block; }
+  .node rect {
+    cursor: pointer;
+    stroke: rgba(255,255,255,0.08);
+    stroke-width: 1px;
+  }
+  .node text {
+    font-size: 13px;
+    fill: var(--fg);
+    pointer-events: none;
+    font-family: Helvetica, Arial, sans-serif;
+  }
+  .node circle {
+    pointer-events: none;
+  }
+  .node.dim rect, .node.dim text, .node.dim circle { opacity: 0.15; }
+  .node.locked rect {
+    stroke: var(--gold);
+    stroke-width: 2.5px;
+  }
+  .node.locked text {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .link {
+    fill: none;
+    stroke-opacity: 0.35;
+    transition: stroke-opacity .15s;
+  }
+  .link.dim { stroke-opacity: 0.025; }
+  .link.bright { stroke-opacity: 0.9; }
+  #tooltip {
+    position: fixed;
+    pointer-events: none;
+    background: #1c1c1c;
+    color: var(--fg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 8px 10px;
+    font-size: 11px;
+    line-height: 1.4;
+    max-width: 280px;
+    opacity: 0;
+    transition: opacity .15s;
+    z-index: 100;
+  }
+  #tooltip .name {
+    color: var(--gold);
+    font-weight: 600;
+    margin-bottom: 4px;
+    font-size: 12px;
+  }
+  #tooltip .meta {
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  footer {
+    padding: 10px 24px;
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="era">2020 – 2026</div>
+  <h1>Creator → Dataset → Consumer</h1>
+  <p>VES On-Set VFX Data Collection &amp; Usage Guide v1.0.0 — flow visualization
+    <button id="about-toggle" class="about-toggle" aria-expanded="false">How to use this</button>
+  </p>
+</header>
+
+<div id="about-panel" hidden>
+  <div class="about-inner">
+    <h2>How to use this</h2>
+
+    <p>This Sankey diagram shows how on-set data flows through a film production: <strong>Creators</strong> on the left (the roles or departments that generate the data), <strong>Datasets</strong> in the middle (the data types from the VES Guide), and <strong>Consumers</strong> on the right (the roles or departments that use the data downstream). Band thickness reflects the number of dataset relationships.</p>
+
+    <h3>Filters</h3>
+    <ul>
+      <li><strong>Category</strong> — narrows to one of the 16 dataset sections from the Guide (camera &amp; lens, lighting, scans, mocap, LED volume, etc.).</li>
+      <li><strong>VFX Type</strong> — narrows to datasets tagged for a particular kind of VFX work (Basic 2D, Basic 3D, Character, Matte Painting, Complex, Mocap, Virtual Production, Real-time).</li>
+      <li><strong>Essential only</strong> — restricts to datasets tagged with a small number of VFX types (default: 4 or fewer). The threshold is adjustable with the +/- controls. Intent: surface datasets specifically critical to a work type rather than the broader foundational stack.</li>
+      <li><strong>Side</strong> — applies <em>only when you hover or click a node in the chart.</em> "Both" shows the full pipeline; "Creators only" or "Consumers only" shows just one direction. The category and VFX type chips at the top are not affected by this control.</li>
+      <li><strong>View</strong> — Readable mode prioritizes label legibility (with vertical scroll). Fit to screen compresses everything to one viewport.</li>
+      <li><strong>Zoom</strong> — +/- controls or keyboard <code>+</code>, <code>−</code>, <code>0</code>.</li>
+    </ul>
+
+    <h3>Interaction</h3>
+    <ul>
+      <li><strong>Hover</strong> any node for a preview highlight of its connections.</li>
+      <li><strong>Click</strong> a node to lock the highlight (gold ring + underline). Persists through scroll, zoom, and density changes. Click the same node again or empty space to release.</li>
+      <li>Hovering a creator or consumer with Side set to Both walks the full pipeline arm. With "Creators only" or "Consumers only" you get just the direct datasets.</li>
+    </ul>
+
+    <h3>An honest note about the VFX Type tagging</h3>
+    <p>The <code>VFXTypes</code> field in the source data is <em>inclusive</em>: each dataset is tagged with every VFX type it could be useful for, not those exclusively essential to it. As a result, types like <strong>Basic 2D, Basic 3D, Matte Painting, Complex, VP, and Real-time</strong> are co-tagged on most foundational data and read as "broadly applicable" rather than as a complexity tier. <strong>Mocap and Character</strong> are the genuinely narrow tags.</p>
+    <p>The <em>Essential only</em> toggle is a downstream interpretation layer that approximates "specialization" using tag count. At threshold ≤4, Matte Painting and Basic 2D return zero — that's the honest answer; these disciplines don't have data exclusive to them, they ride the shared foundational stack. The empty-state message in the viz says so explicitly.</p>
+
+    <h3>Credits</h3>
+    <p>Source data: <em>VES On-Set VFX Data Collection and Usage Guide v1.0.0</em> by Sheena Duggal, with contributions from Sam Richards, Jim Geduldick, and Jake Morrison; technical support from Jean-Francois Panisset. Created for the VES Technology Committee.</p>
+
+    <p style="text-align:right; margin-top: 18px;"><button id="about-close" class="about-toggle">Close</button></p>
+  </div>
+</div>
+
+<div id="controls">
+  <span class="label">Category</span>
+  <button class="chip active" data-cat="all">All</button>
+</div>
+
+<div id="controls-type">
+  <span class="label">VFX Type</span>
+  <button class="chip-type active" data-type="all">All</button>
+  <button class="chip-type" data-type="Basic 2D">Basic 2D</button>
+  <button class="chip-type" data-type="Basic 3D">Basic 3D</button>
+  <button class="chip-type" data-type="Character">Character</button>
+  <button class="chip-type" data-type="Matte Painting">Matte Painting</button>
+  <button class="chip-type" data-type="Complex">Complex</button>
+  <button class="chip-type" data-type="Mocap">Mocap</button>
+  <button class="chip-type" data-type="VP">Virtual Production</button>
+  <button class="chip-type" data-type="Real-time">Real-time</button>
+  <span style="display:inline-block;width:1px;height:18px;background:var(--border);margin:0 6px;"></span>
+  <button class="chip-essential" id="chip-essential" title="Show only datasets specifically critical to this type">Essential only</button>
+  <span id="threshold-controls" style="display:none;align-items:center;gap:4px;margin-left:4px;">
+    <button class="chip-zoom" id="threshold-down" title="Stricter (fewer datasets)">−</button>
+    <span id="threshold-value" style="color:var(--gold);font-size:11px;font-weight:600;letter-spacing:1px;min-width:54px;text-align:center;">≤ 4 TYPES</span>
+    <button class="chip-zoom" id="threshold-up" title="Looser (more datasets)">+</button>
+  </span>
+</div>
+
+<div id="controls-side">
+  <span class="label">Side</span>
+  <span style="color:var(--muted);font-size:10px;font-style:italic;margin-right:6px;">(applies on node click/hover only)</span>
+  <button class="chip-side active" data-side="all">Both</button>
+  <button class="chip-side" data-side="creators">Creators only</button>
+  <button class="chip-side" data-side="consumers">Consumers only</button>
+</div>
+
+<div id="controls-density">
+  <span class="label">View</span>
+  <button class="chip-density active" data-density="readable">Readable (scroll)</button>
+  <button class="chip-density" data-density="fit">Fit to screen</button>
+</div>
+
+<div id="controls-zoom">
+  <span class="label">Zoom</span>
+  <button class="chip-zoom" data-zoom="out">−</button>
+  <button class="chip-zoom" data-zoom="reset">100%</button>
+  <button class="chip-zoom" data-zoom="in">+</button>
+  <span id="zoom-value" style="color:var(--muted);font-size:11px;margin-left:8px;"></span>
+</div>
+
+<div id="chart-container">
+  <svg id="chart"></svg>
+</div>
+
+<div id="tooltip"></div>
+
+<footer>VES Technology Committee · Sankey · drag-to-scroll if cropped</footer>
+
+<script>
+// =============================================================================
+// DATA — extracted from VES On-Set VFX Data Collection and Usage Guide v1.0.0
+// =============================================================================
+
+const DATASETS = [
+  // 1. Camera & Lens Data
+  {id:"1.1", name:"Manual Camera Data Collection", cat:1,
+   creators:["Data Wrangler","Camera Dept","VP Stage Team"],
+   consumers:["VFX Post Vendor","Previz Vendor","Postviz Vendor","3D Conversion","2nd Unit","Additional Photography","Studio Marketing"],
+   vfxTypes:["Basic 2D","Basic 3D","Character","Matte Painting","Complex","Mocap","VP","Real-time"]},
+  {id:"1.2", name:"Camera Type & Model", cat:1,
+   creators:["Data Wrangler","Camera Dept"],
+   consumers:["Dailies/DI","VFX Post Vendor","Previz Vendor","Post Production","3D Conversion","Additional Photography","Studio Marketing","VFX Editorial"],
+   vfxTypes:["Basic 2D","Basic 3D","Character","Matte Painting","Complex","Mocap","VP","Real-time"]},
+  {id:"1.3", name:"Per-Take Sensor Metadata", cat:1,
+   creators:["Camera Dept","Data Wrangler"],
+   consumers:["Dailies/DI","VFX Post Vendor","Previz Vendor","3D Conversion","2nd Unit","Additional Photography"],
+   vfxTypes:["Basic 2D","Basic 3D","Character","Matte Painting","Complex","Mocap","VP","Real-time"]},
+  {id:"1.4", name:"Per-Camera Lens Specs", cat:1,
+   creators:["Camera Dept","Data Wrangler"],
+   consumers:["VFX Post Vendor","Previz Vendor","3D Conversion","Studio Marketing","VFX Editorial"],
+   vfxTypes:["Basic 2D","Basic 3D","Character","Matte Painting","Complex","Mocap","VP","Real-time"]},
+  {id:"1.5", name:"Lens Encoder Tracking Data", cat:1,
+   creators:["Camera Dept","Data Wrangler"],
+   consumers:["VFX Post Vendor","Previz Vendor","3D Conversion","Studio Marketing","VFX Editorial","2nd Unit"],
+   vfxTypes:["Basic 2D","Basic 3D","Character","Matte Painting","Complex","Mocap","VP","Real-time"]},
+  {id:"1.6", name:"Camera Depth Information", cat:1,
+   creators:["Camera Dept","Data Wrangler"],
+   consumers:["VFX Post Vendor","Previz Vendor","3D Conversion","Studio Marketing","2nd Unit"],
+   vfxTypes:["Complex","Mocap","VP","Real-time"]},
+
+  // 2. Witness Cameras & Reference Video
+  {id:"2.1", name:"Multiple Witness Cameras", cat:2,
+   creators:["VFX Production","Camera Dept"],
+   consumers:["VFX Post Vendor","Previz Vendor","Studio Marketing"],
+   vfxTypes:["Basic 3D","Complex","Mocap","VP"]},
+  {id:"2.2", name:"Overhead & Wide-Angle BTS", cat:2,
+   creators:["VFX Production","Camera Dept"],
+   consumers:["VFX Post Vendor","Previz Vendor","Studio Marketing"],
+   vfxTypes:["Basic 3D","Character","Complex","Mocap","VP"]},
+  {id:"2.3", name:"Real-World Depth Information", cat:2,
+   creators:["VFX Production","VFX On-Set Capture"],
+   consumers:["Art Dept","Previz Vendor","Stunt Dept","VFX Post Vendor","Studio Marketing"],
+   vfxTypes:["Basic 3D","Complex"]},
+
+  // 3. Production Reports & Metadata
+  {id:"3.1", name:"Camera Reports", cat:3,
+   creators:["Data Wrangler","Camera Dept","Script Supervisor"],
+   consumers:["Editorial","Script Supervisor","VFX Post Vendor","2nd Unit","Additional Photography","Previz Vendor","Art Dept","VFX Production","Producers","Studio Executives"],
+   vfxTypes:["Basic 2D","Basic 3D","Character","Matte Painting","Complex","Mocap","VP","Real-time"]},
+  {id:"3.2", name:"Clips Report", cat:3,
+   creators:["Camera Dept","DIT"],
+   consumers:["Dailies Vendor","Editorial","Script Supervisor","Data Wrangler","VFX Production","2nd Unit"],
+   vfxTypes:["Complex","Mocap","VP"]},
+  {id:"3.3", name:"Shooting Day Report", cat:3,
+   creators:["Script Supervisor","AD Dept"],
+   consumers:["AD Dept","Script Supervisor","Producers","VFX Production","VFX Editorial","2nd Unit"],
+   vfxTypes:["Complex","Mocap","VP"]},
+  {id:"3.4", name:"Sound Report", cat:3,
+   creators:["Sound Dept"],
+   consumers:["Editorial","VFX Post Vendor","VP Stage Team","Mocap Vendor"],
+   vfxTypes:["Complex","Mocap","VP","Real-time"]},
+  {id:"3.5", name:"Schedule and One-Liner", cat:3,
+   creators:["AD Dept"],
+   consumers:["Entire Crew","Actors","Studio","Producers","Editorial","Dailies Vendor","Post Production","2nd Unit"],
+   vfxTypes:["Basic 2D","Basic 3D","Matte Painting","Complex","Mocap","VP","Real-time"]},
+  {id:"3.6", name:"Script Supervisor Notes", cat:3,
+   creators:["Script Supervisor"],
+   consumers:["Editorial","Camera Dept","AD Dept","VFX Post Vendor","Costume Dept","Hair & Makeup","Sound Dept","2nd Unit","Additional Photography"],
+   vfxTypes:["Basic 2D","Basic 3D","Matte Painting","Complex","Mocap","VP"]},
+
+  // 4. Colour & Lighting Reference
+  {id:"4.1", name:"Colour Charts", cat:4,
+   creators:["Data Wrangler"],
+   consumers:["VFX Post Vendor"],
+   vfxTypes:["Basic 2D","Basic 3D","Matte Painting","Complex","VP","Real-time"]},
+  {id:"4.2", name:"HDRIs", cat:4,
+   creators:["Data Wrangler","VFX On-Set Capture"],
+   consumers:["VFX Post Vendor","Studio Marketing"],
+   vfxTypes:["Basic 2D","Basic 3D","Matte Painting","Complex","VP","Real-time"]},
+  {id:"4.3", name:"Lighting Ref Objects/Props", cat:4,
+   creators:["SFX Vendor","Props Dept","Art Dept","Stunt Dept"],
+   consumers:["VFX Post Vendor","Studio Marketing"],
+   vfxTypes:["Basic 3D","Matte Painting","Complex","VP","Real-time"]},
+  {id:"4.4", name:"DMX/Lighting Control Metadata", cat:4,
+   creators:["VP Stage Team","Gaffer","Post Production"],
+   consumers:["VFX Post Vendor","VP Stage Team","Post Production"],
+   vfxTypes:["Basic 3D","Matte Painting","Complex","VP","Real-time"]},
+  {id:"4.5", name:"Light Sources & Colour Temp", cat:4,
+   creators:["Data Wrangler","Camera Dept"],
+   consumers:["VFX Post Vendor","Studio Marketing","Previz Vendor","Additional Photography"],
+   vfxTypes:["Basic 3D","Matte Painting","Complex","VP","Real-time"]},
+  {id:"4.6", name:"Shadow Behavior & Falloff", cat:4,
+   creators:["Data Wrangler"],
+   consumers:["VFX Post Vendor","Studio Marketing","Previz Vendor","Additional Photography"],
+   vfxTypes:["Basic 3D","Matte Painting","Complex","VP","Real-time"]},
+
+  // 5. Set, Prop, and Actor Scans
+  {id:"5.1", name:"LIDAR / Texture Photography", cat:5,
+   creators:["VFX On-Set Capture","Data Wrangler"],
+   consumers:["VFX Post Vendor","Studio Marketing","Previz Vendor","Stunt Dept","Art Dept","LED Volume Vendor","VFX Production"],
+   vfxTypes:["Basic 3D","Matte Painting","Complex","VP","Real-time"]},
+  {id:"5.2", name:"Prop Scans", cat:5,
+   creators:["Props Dept","VFX On-Set Capture"],
+   consumers:["VFX Post Vendor","Previz Vendor","Studio Marketing","Stunt Dept","Art Dept","Additional Photography"],
+   vfxTypes:["Basic 3D","Matte Painting","Complex","VP","Real-time"]},
+  {id:"5.3", name:"Photogrammetry", cat:5,
+   creators:["Data Wrangler","VFX On-Set Capture"],
+   consumers:["VFX Post Vendor","Studio Marketing","Stunt Dept","Art Dept","Additional Photography","Previz Vendor"],
+   vfxTypes:["Basic 3D","Matte Painting","Complex","VP","Real-time"]},
+  {id:"5.4", name:"NeRFs / Gaussian Splats", cat:5,
+   creators:["Data Wrangler","VFX On-Set Capture"],
+   consumers:["VFX Post Vendor","Studio Marketing","Stunt Dept","Art Dept","Additional Photography","Previz Vendor","VP Stage Team"],
+   vfxTypes:["Basic 3D","Matte Painting","Complex","VP","Real-time"]},
+  {id:"5.5", name:"Face Scans, Body Scans", cat:5,
+   creators:["VFX On-Set Capture"],
+   consumers:["VFX Post Vendor","Studio Marketing","Previz Vendor","Animation Vendor"],
+   vfxTypes:["Character","Complex","Mocap"]},
+  {id:"5.6", name:"Set Reference Photography", cat:5,
+   creators:["Data Wrangler","Camera Dept"],
+   consumers:["VFX Post Vendor","Studio Marketing","2nd Unit"],
+   vfxTypes:["Basic 2D","Basic 3D","Matte Painting","Complex","VP","Real-time"]},
+  {id:"5.7", name:"Costume / Face Marker / T-Pose", cat:5,
+   creators:["VFX On-Set Capture"],
+   consumers:["VFX Post Vendor","Studio Marketing","Previz Vendor"],
+   vfxTypes:["Complex","Mocap"]},
+  {id:"5.8", name:"Vehicle/Prop/Location Reference", cat:5,
+   creators:["VFX On-Set Capture","Data Wrangler"],
+   consumers:["VFX Post Vendor","Studio Marketing","Previz Vendor"],
+   vfxTypes:["Basic 3D","Matte Painting","Complex","VP","Real-time"]},
+
+  // 6. Camera Rig & Tech Specs
+  {id:"6.1", name:"Camera Tech Specs", cat:6,
+   creators:["Data Wrangler","Camera Dept"],
+   consumers:["VFX Post Vendor","Studio Marketing","Dailies/DI","Camera Dept","Previz Vendor"],
+   vfxTypes:["Complex","Mocap","VP","Real-time"]},
+  {id:"6.2", name:"DIT Specs", cat:6,
+   creators:["DP","DIT","Dailies Vendor"],
+   consumers:["VFX Post Vendor","Studio Marketing","DI Facility","Camera Dept"],
+   vfxTypes:["Complex","VP","Real-time"]},
+  {id:"6.3", name:"Lens Specification", cat:6,
+   creators:["Camera Dept","VP Stage Team"],
+   consumers:["Previz Vendor","VFX Post Vendor"],
+   vfxTypes:["Basic 2D","Basic 3D","Matte Painting","Complex","Mocap","VP","Real-time"]},
+
+  // 7. Vendor & Pre-Production Data
+  {id:"7.1", name:"Previz / Techviz", cat:7,
+   creators:["Previz Vendor","VFX Production"],
+   consumers:["VFX Production","AD Dept","Director","Producers","Studio","Stunt Dept","SFX Vendor","Art Dept","Entire Crew","2nd Unit"],
+   vfxTypes:["Basic 2D","Basic 3D","Matte Painting","Complex","Mocap","VP","Real-time"]},
+  {id:"7.2", name:"Concept Art, Lookdev, Storyboards", cat:7,
+   creators:["Concept Artists","VFX Vendor Art"],
+   consumers:["Entire Crew","Studio Executives","Studio Marketing","Previz Vendor","VFX Post Vendor","2nd Unit"],
+   vfxTypes:["Basic 2D","Basic 3D","Character","Matte Painting","Complex","Mocap","VP","Real-time"]},
+
+  // 8. Mocap Data
+  {id:"8.1", name:"Mocap Suit Tracking", cat:8,
+   creators:["Stunt Dept","Actors","Mocap Vendor"],
+   consumers:["VFX Post Vendor","Previz Vendor","Game Studios"],
+   vfxTypes:["Complex","Mocap"]},
+  {id:"8.2", name:"Performance Capture Facial", cat:8,
+   creators:["Actors","Mocap Vendor"],
+   consumers:["VFX Post Vendor","Previz Vendor","Game Studios"],
+   vfxTypes:["Complex","Mocap"]},
+  {id:"8.3", name:"Hand / Finger Tracking", cat:8,
+   creators:["Actors","Mocap Vendor"],
+   consumers:["VFX Post Vendor","Previz Vendor","Game Studios"],
+   vfxTypes:["Complex","Mocap"]},
+  {id:"8.4", name:"Raw Animation & Retargeting", cat:8,
+   creators:["Actors","Mocap Vendor"],
+   consumers:["VFX Post Vendor","Previz Vendor","Game Studios"],
+   vfxTypes:["Complex","Mocap"]},
+  {id:"8.5", name:"Mocap Volume Data", cat:8,
+   creators:["Mocap Vendor"],
+   consumers:["VFX Post Vendor","Game Studios"],
+   vfxTypes:["Complex","Mocap"]},
+
+  // 9. Camera Tracking & Sync
+  {id:"9.1", name:"Camera Tracking Data", cat:9,
+   creators:["Camera Dept","Data Wrangler","VFX Production"],
+   consumers:["VFX Post Vendor","Previz Vendor"],
+   vfxTypes:["Basic 2D","Basic 3D","Matte Painting","Complex","Mocap","VP","Real-time"]},
+  {id:"9.2", name:"Timecode Sync & Genlock", cat:9,
+   creators:["Camera Dept","Mocap Vendor"],
+   consumers:["Camera Dept","Sound Dept","VP Stage Team","Post Production"],
+   vfxTypes:["Complex","Mocap","VP","Real-time"]},
+  {id:"9.3", name:"IMU Data", cat:9,
+   creators:["Camera Dept","Data Wrangler"],
+   consumers:["VP Stage Team","Mocap Vendor","VFX Post Vendor"],
+   vfxTypes:["Complex","Mocap","VP","Real-time"]},
+
+  // 10. LED Volume & Environment Data
+  {id:"10.1", name:"Volume Layout & Dimensions", cat:10,
+   creators:["LED Volume Vendor","Virtual Art Dept"],
+   consumers:["VP Stage Team","Virtual Art Dept","VFX Post Vendor"],
+   vfxTypes:["Complex","VP","Real-time"]},
+  {id:"10.2", name:"Display Frustum Calibration", cat:10,
+   creators:["VP Supervisor","VP Tech Director"],
+   consumers:["VP Stage Team","Postviz Vendor","VFX Post Vendor"],
+   vfxTypes:["VP","Real-time"]},
+  {id:"10.3", name:"Colour Profile & Brightness", cat:10,
+   creators:["VP Stage Team","Virtual Art Dept","VP Supervisor","VFX Supervisor"],
+   consumers:["VFX Post Vendor","Post Production"],
+   vfxTypes:["Complex","VP","Real-time"]},
+  {id:"10.4", name:"Latency Data", cat:10,
+   creators:["Camera Dept","VP Stage Team"],
+   consumers:["VFX Post Vendor","Sound Dept","Post Production"],
+   vfxTypes:["Complex","VP","Real-time"]},
+  {id:"10.5", name:"Plate vs. Real-Time Assets", cat:10,
+   creators:["VP Stage Team","VP Vendor"],
+   consumers:["VFX Production","VP Stage Team","VFX Post Vendor"],
+   vfxTypes:["Complex","VP","Real-time"]},
+
+  // 11. Scene Metadata & Notes
+  {id:"11.1", name:"VP Log & Continuity Notes", cat:11,
+   creators:["VP Stage Team"],
+   consumers:["VFX Post Vendor"],
+   vfxTypes:["Complex","VP","Real-time"]},
+  {id:"11.2", name:"VP Operator Metadata", cat:11,
+   creators:["VP Stage Team"],
+   consumers:["VFX Post Vendor"],
+   vfxTypes:["Complex","VP","Real-time"]},
+  {id:"11.3", name:"On-Set Real-Time Adjustments", cat:11,
+   creators:["VP Stage Team"],
+   consumers:["VFX Post Vendor"],
+   vfxTypes:["Complex","VP","Real-time"]},
+
+  // 12. Audio & Sync
+  {id:"12.1", name:"Sound Slate & Timecode Align", cat:12,
+   creators:["Sound Dept","Camera Dept","VP Stage Team"],
+   consumers:["Sound Dept","Camera Dept","VP Stage Team","VFX Post Vendor"],
+   vfxTypes:["Complex","Mocap","VP","Real-time"]},
+  {id:"12.2", name:"Spatial Audio Tracking", cat:12,
+   creators:["Spatial Audio Mixer"],
+   consumers:["Post Production","Sound Mixer"],
+   vfxTypes:["Complex","VP","Real-time"]},
+  {id:"12.3", name:"Lip Sync & Character Audio", cat:12,
+   creators:["Camera Dept","Editorial","Sound Mixer"],
+   consumers:["Editorial","VFX Post Vendor"],
+   vfxTypes:["Character","Complex","Mocap","VP","Real-time"]},
+
+  // 13. Other Production Departments
+  {id:"13.1", name:"Physical Props, Costumes", cat:13,
+   creators:["Props Dept","Costume Dept","Stunt Dept"],
+   consumers:["VFX Post Vendor"],
+   vfxTypes:["Basic 3D","Matte Painting","Complex","VP","Real-time"]},
+  {id:"13.2", name:"Mudmaps", cat:13,
+   creators:["Stunt Dept"],
+   consumers:["VFX Production","Director","Actors","Stunt Dept","Editorial","Previz Vendor","2nd Unit"],
+   vfxTypes:["Basic 3D","Matte Painting","Complex","VP","Real-time"]},
+  {id:"13.3", name:"Storyboards, Previz, Stuntviz", cat:13,
+   creators:["Previz Vendor","Stunt Dept","Storyboard Team"],
+   consumers:["VFX Production","VFX Post Vendor","AD Dept","Director","Producers","Studio Executives","Studio Marketing","Stunt Dept","SFX Vendor","Art Dept","2nd Unit","Entire Crew"],
+   vfxTypes:["Basic 2D","Basic 3D","Matte Painting","Complex","VP","Real-time"]},
+  {id:"13.4", name:"Art Department Assets", cat:13,
+   creators:["Art Dept","Locations Dept"],
+   consumers:["VFX Post Vendor","Studio Marketing","Studio Executives","Additional Photography","2nd Unit","Editorial","Previz Vendor"],
+   vfxTypes:["Basic 2D","Basic 3D","Character","Matte Painting","Complex","VP","Real-time"]},
+
+  // 14. Data Shared with VFX Vendors
+  {id:"14.1", name:"Previz/Techviz/Concept (Vendor)", cat:14,
+   creators:["Previz Vendor","Art Dept","VFX Production"],
+   consumers:["VFX Post Vendor"],
+   vfxTypes:["Basic 2D","Basic 3D","Character","Matte Painting","Complex","VP","Real-time"]},
+  {id:"14.2", name:"Lens Grid & Reference Specs", cat:14,
+   creators:["VFX Production","VP Stage Team","Data Wrangler","Camera Dept"],
+   consumers:["VFX Post Vendor"],
+   vfxTypes:["Basic 3D","Matte Painting","Complex","VP","Real-time"]},
+
+  // 15. Data Management, Tracking, and Review
+  {id:"15.1", name:"Production Tracking Systems", cat:15,
+   creators:["Editorial","Dailies Vendor","VFX Production"],
+   consumers:["VFX Production","VFX Post Vendor"],
+   vfxTypes:["Basic 3D","Matte Painting","Complex","VP","Real-time"]},
+  {id:"15.2", name:"Descriptive File Naming", cat:15,
+   creators:["Editorial","Dailies Vendor","VFX Production","VFX Post Vendor","VP Stage Team","Mocap Vendor","Data Wrangler","DI Facility"],
+   consumers:["VFX Production","Editorial","Studio Executives","VFX Post Vendor","Previz Vendor","Studio Marketing","DI Facility"],
+   vfxTypes:["Basic 2D","Basic 3D","Matte Painting","Complex","Mocap","VP","Real-time"]},
+  {id:"15.3", name:"Review Tools", cat:15,
+   creators:["Editorial","Dailies Vendor","VFX Production","VFX Post Vendor"],
+   consumers:["VFX Production","Director","Actors","Stunt Dept","Editorial","Studio Executives","Previz Vendor","2nd Unit"],
+   vfxTypes:["Basic 2D","Basic 3D","Matte Painting","Complex","Mocap","VP","Real-time"]},
+  {id:"15.4", name:"Show Technical Specifications", cat:15,
+   creators:["VFX Production"],
+   consumers:["VFX Post Vendor"],
+   vfxTypes:["Basic 2D","Basic 3D","Character","Matte Painting","Complex","Mocap","VP","Real-time"]},
+
+  // 16. Plate Deliverables
+  {id:"16.1", name:"Naming Conventions & Metadata", cat:16,
+   creators:["DI Facility"],
+   consumers:["VFX Post Vendor","Studio Marketing","VP Stage Team"],
+   vfxTypes:["Basic 2D","Basic 3D","Character","Matte Painting","Complex","Mocap","VP","Real-time"]},
+  {id:"16.2", name:"Plate & Editorial Reference", cat:16,
+   creators:["Pull Vendor","VFX Editorial","VFX Production"],
+   consumers:["VFX Post Vendor","VP Stage Team"],
+   vfxTypes:["Basic 2D","Basic 3D","Character","Matte Painting","Complex","Mocap","VP","Real-time"]},
+  {id:"16.3", name:"VFX Shot Delivery", cat:16,
+   creators:["VFX Post Vendor"],
+   consumers:["VFX Production","VFX Editorial","Editorial"],
+   vfxTypes:["Basic 2D","Basic 3D","Character","Matte Painting","Complex","Mocap","VP","Real-time"]},
+];
+
+const CATEGORIES = {
+  1:  {name:"1. Camera & Lens Data",          color:"#E8B04A"},
+  2:  {name:"2. Witness Cameras & Ref Video", color:"#D9836F"},
+  3:  {name:"3. Production Reports",          color:"#9DBE8C"},
+  4:  {name:"4. Colour & Lighting Reference", color:"#F2D27A"},
+  5:  {name:"5. Set, Prop & Actor Scans",     color:"#7FB3CF"},
+  6:  {name:"6. Camera Rig & Tech Specs",     color:"#C49ECF"},
+  7:  {name:"7. Vendor / Pre-Production",     color:"#E0A06A"},
+  8:  {name:"8. Mocap Data",                  color:"#7AB8A6"},
+  9:  {name:"9. Camera Tracking & Sync",      color:"#B6B0DE"},
+  10: {name:"10. LED Volume & Environment",   color:"#E07F7F"},
+  11: {name:"11. Scene Metadata & Notes",     color:"#9DD3B0"},
+  12: {name:"12. Audio & Sync",               color:"#D6A5C9"},
+  13: {name:"13. Other Production Depts",     color:"#C8B27D"},
+  14: {name:"14. Data Shared w/ Vendors",     color:"#8FBFE2"},
+  15: {name:"15. Data Mgmt, Tracking, Review",color:"#D89BB9"},
+  16: {name:"16. Plate Deliverables",         color:"#9FCB87"},
+};
+
+// =============================================================================
+// BUILD SANKEY DATA
+// =============================================================================
+
+function buildGraph(activeCats, activeType, essentialOnly, threshold) {
+  let filtered = DATASETS;
+  if (activeCats !== "all") {
+    filtered = filtered.filter(d => d.cat === activeCats);
+  }
+  if (activeType !== "all") {
+    filtered = filtered.filter(d => d.vfxTypes && d.vfxTypes.includes(activeType));
+  }
+  if (essentialOnly) {
+    filtered = filtered.filter(d => d.vfxTypes && d.vfxTypes.length <= threshold);
+  }
+
+  const nodes = [];
+  const nodeIndex = new Map();
+  const links = [];
+
+  function addNode(name, kind, meta={}) {
+    const key = kind + "|" + name;
+    if (nodeIndex.has(key)) return nodeIndex.get(key);
+    const idx = nodes.length;
+    nodes.push({name, kind, ...meta});
+    nodeIndex.set(key, idx);
+    return idx;
+  }
+
+  filtered.forEach(d => {
+    const dsName = `${d.id}  ${d.name}`;
+    const dsIdx = addNode(dsName, "dataset", {cat:d.cat, datasetId:d.id, raw:d});
+    d.creators.forEach(c => {
+      const ci = addNode(c, "creator");
+      links.push({source:ci, target:dsIdx, value:1, cat:d.cat});
+    });
+    d.consumers.forEach(c => {
+      const ci = addNode(c, "consumer");
+      links.push({source:dsIdx, target:ci, value:1, cat:d.cat});
+    });
+  });
+
+  return {nodes, links};
+}
+
+// =============================================================================
+// RENDER
+// =============================================================================
+
+const W = Math.max(1200, window.innerWidth - 20);
+const NODE_HEIGHT_PER_LINK = 8;
+
+let activeCat = "all";
+let activeType = "all";
+let essentialOnly = false;
+let essentialThreshold = 4;
+let sideMode = "all"; // "all" | "creators" | "consumers"
+let density = "readable"; // "readable" | "fit"
+let zoom = 1.0;
+let lockedKey = null;
+
+const tooltip = document.getElementById("tooltip");
+
+function render() {
+  const graph = buildGraph(activeCat, activeType, essentialOnly, essentialThreshold);
+  // Compute height based on number of nodes — keep readable
+  const datasetCount = graph.nodes.filter(n => n.kind === "dataset").length;
+
+  // Empty-state hint (specific to Essential filter)
+  if (datasetCount === 0) {
+    const emptyH = 360;
+    const svg = d3.select("#chart")
+      .attr("width", W).attr("height", emptyH)
+      .attr("viewBox", null).html("");
+
+    const headline = essentialOnly && activeType !== "all"
+      ? `No datasets are exclusively essential to "${activeType}".`
+      : essentialOnly
+      ? "No specialized datasets in this filtered set."
+      : "No datasets match the current filters.";
+    const subline = essentialOnly && activeType !== "all"
+      ? `This work type relies on the foundational data shared across most VFX work.`
+      : "";
+
+    const cx = W / 2;
+    svg.append("text")
+      .attr("x", cx).attr("y", 130)
+      .attr("text-anchor", "middle")
+      .attr("fill", "#EDE8E0")
+      .style("font-size", "22px")
+      .style("font-weight", "600")
+      .text(headline);
+
+    if (subline) {
+      // Wrap if too wide
+      const words = subline.split(" ");
+      const maxCharsPerLine = 55;
+      const lines = [];
+      let current = "";
+      words.forEach(w => {
+        if ((current + " " + w).trim().length > maxCharsPerLine) {
+          lines.push(current.trim());
+          current = w;
+        } else {
+          current += " " + w;
+        }
+      });
+      if (current.trim()) lines.push(current.trim());
+
+      lines.forEach((ln, i) => {
+        svg.append("text")
+          .attr("x", cx).attr("y", 175 + i * 26)
+          .attr("text-anchor", "middle")
+          .attr("fill", "#DDA830")
+          .style("font-size", "16px")
+          .style("font-style", "italic")
+          .text(ln);
+      });
+    }
+    return;
+  }
+
+  // Density-driven sizing
+  const fitToScreen = density === "fit";
+  const viewportH = window.innerHeight;
+  // Reserve room for header + 3 controls rows + footer (~280px on desktop)
+  const reservedChrome = 300;
+
+  let H;
+  let nodePadding;
+  let fontSize;
+  let datasetFontSize;
+  if (fitToScreen) {
+    H = Math.max(500, viewportH - reservedChrome);
+    nodePadding = Math.max(2, Math.floor(H / datasetCount * 0.15));
+    fontSize = datasetCount > 40 ? 8 : datasetCount > 20 ? 10 : 12;
+    datasetFontSize = fontSize;
+  } else {
+    H = Math.max(900, Math.min(3200, datasetCount * 36 + 240));
+    nodePadding = 14;
+    fontSize = 13;
+    datasetFontSize = 13;
+  }
+
+  const svg = d3.select("#chart")
+    .attr("width", W * zoom)
+    .attr("height", H * zoom)
+    .attr("viewBox", `0 0 ${W} ${H}`)
+    .attr("preserveAspectRatio", "xMidYMid meet")
+    .html("");
+
+  const sankey = d3.sankey()
+    .nodeWidth(14)
+    .nodePadding(nodePadding)
+    .extent([[180, 50], [W - 260, H - 40]]);
+
+  const {nodes, links} = sankey({
+    nodes: graph.nodes.map(d => Object.assign({}, d)),
+    links: graph.links.map(d => Object.assign({}, d)),
+  });
+
+  // Resolve lockedKey to a current node in this render
+  let lockedNode = null;
+  if (lockedKey) {
+    lockedNode = nodes.find(n => n.kind === lockedKey.kind && n.name === lockedKey.name) || null;
+    if (!lockedNode) lockedKey = null; // node no longer exists in filtered graph
+  }
+
+  // Column headers — Creator / Dataset / Consumer above the three columns
+  const creators = nodes.filter(n => n.kind === "creator");
+  const datasets = nodes.filter(n => n.kind === "dataset");
+  const consumers = nodes.filter(n => n.kind === "consumer");
+
+  const creatorX  = creators.length  ? Math.max(...creators.map(n => n.x1))  : null;
+  const datasetX  = datasets.length  ? (datasets[0].x0 + datasets[0].x1) / 2 : null;
+  const consumerX = consumers.length ? Math.min(...consumers.map(n => n.x0)) : null;
+
+  const headerY = 16;
+  const headerColor = "#DDA830";
+  const headerSize = 13;
+
+  if (creatorX !== null) {
+    svg.append("text")
+      .attr("x", creatorX).attr("y", headerY)
+      .attr("text-anchor", "end")
+      .attr("fill", headerColor)
+      .style("font-size", headerSize + "px")
+      .style("font-weight", "700")
+      .style("letter-spacing", "2px")
+      .text("CREATOR");
+  }
+  if (datasetX !== null) {
+    svg.append("text")
+      .attr("x", datasetX).attr("y", headerY)
+      .attr("text-anchor", "middle")
+      .attr("fill", headerColor)
+      .style("font-size", headerSize + "px")
+      .style("font-weight", "700")
+      .style("letter-spacing", "2px")
+      .text("DATASET");
+  }
+  if (consumerX !== null) {
+    svg.append("text")
+      .attr("x", consumerX).attr("y", headerY)
+      .attr("text-anchor", "start")
+      .attr("fill", headerColor)
+      .style("font-size", headerSize + "px")
+      .style("font-weight", "700")
+      .style("letter-spacing", "2px")
+      .text("CONSUMER");
+  }
+
+  // Links
+  const linkSel = svg.append("g")
+    .attr("fill", "none")
+    .selectAll("path")
+    .data(links)
+    .join("path")
+      .attr("class", "link")
+      .attr("d", d3.sankeyLinkHorizontal())
+      .attr("stroke", d => CATEGORIES[d.cat] ? CATEGORIES[d.cat].color : "#888")
+      .attr("stroke-width", d => Math.max(1, d.width));
+
+  // Nodes
+  const nodeSel = svg.append("g")
+    .selectAll("g")
+    .data(nodes)
+    .join("g")
+      .attr("class", "node");
+
+  nodeSel.append("rect")
+    .attr("x", d => d.x0)
+    .attr("y", d => d.y0)
+    .attr("height", d => Math.max(1, d.y1 - d.y0))
+    .attr("width", d => d.x1 - d.x0)
+    .attr("fill", d => {
+      if (d.kind === "dataset") return CATEGORIES[d.cat].color;
+      return "#3a3a3a";
+    });
+
+  // Dataset labels: cream text + colored swatch prefix
+  // Creator/consumer labels: cream text, plain
+  const labelGroups = nodeSel.append("g")
+    .attr("class", "label");
+
+  // Swatch only for datasets
+  labelGroups.filter(d => d.kind === "dataset")
+    .append("circle")
+    .attr("cx", d => d.x1 + 12)
+    .attr("cy", d => (d.y0 + d.y1) / 2)
+    .attr("r", 4.5)
+    .attr("fill", d => CATEGORIES[d.cat].color);
+
+  // Text
+  labelGroups.append("text")
+    .attr("x", d => {
+      if (d.kind === "creator") return d.x0 - 6;
+      if (d.kind === "dataset") return d.x1 + 22; // leave room for swatch
+      return d.x1 + 6;
+    })
+    .attr("y", d => (d.y0 + d.y1) / 2)
+    .attr("dy", "0.35em")
+    .attr("text-anchor", d => d.kind === "creator" ? "end" : "start")
+    .attr("fill", "#EDE8E0")
+    .style("font-size", d => (d.kind === "dataset" ? datasetFontSize : fontSize) + "px")
+    .style("font-weight", d => d.kind === "dataset" ? 600 : 400)
+    .text(d => d.name);
+
+  // Compute reachable nodes + links from a hovered/clicked node, respecting sideMode
+  function computeHighlight(d) {
+    const reachable = new Set([d.index]);
+    const brightLinks = new Set();
+
+    if (d.kind === "dataset") {
+      links.forEach(l => {
+        const isIncoming = l.target.index === d.index;
+        const isOutgoing = l.source.index === d.index;
+        let show = false;
+        if (sideMode === "all")        show = isIncoming || isOutgoing;
+        else if (sideMode === "creators")  show = isIncoming;
+        else if (sideMode === "consumers") show = isOutgoing;
+        if (show) {
+          brightLinks.add(l);
+          if (isIncoming) reachable.add(l.source.index);
+          if (isOutgoing) reachable.add(l.target.index);
+        }
+      });
+    } else if (d.kind === "creator") {
+      if (sideMode === "creators") {
+        links.forEach(l => {
+          if (l.source.index === d.index) {
+            brightLinks.add(l);
+            reachable.add(l.target.index);
+          }
+        });
+      } else {
+        const queue = [d.index];
+        while (queue.length) {
+          const cur = queue.shift();
+          links.forEach(l => {
+            if (l.source.index !== cur || brightLinks.has(l)) return;
+            brightLinks.add(l);
+            if (!reachable.has(l.target.index)) {
+              reachable.add(l.target.index);
+              queue.push(l.target.index);
+            }
+          });
+        }
+      }
+    } else { // consumer
+      if (sideMode === "consumers") {
+        links.forEach(l => {
+          if (l.target.index === d.index) {
+            brightLinks.add(l);
+            reachable.add(l.source.index);
+          }
+        });
+      } else {
+        const queue = [d.index];
+        while (queue.length) {
+          const cur = queue.shift();
+          links.forEach(l => {
+            if (l.target.index !== cur || brightLinks.has(l)) return;
+            brightLinks.add(l);
+            if (!reachable.has(l.source.index)) {
+              reachable.add(l.source.index);
+              queue.push(l.source.index);
+            }
+          });
+        }
+      }
+    }
+    return {reachable, brightLinks};
+  }
+
+  function applyHighlight(reachable, brightLinks, lockedNode) {
+    linkSel.classed("dim", l => !brightLinks.has(l));
+    linkSel.classed("bright", l => brightLinks.has(l));
+    nodeSel.classed("dim", n => !reachable.has(n.index));
+    nodeSel.classed("locked", n => lockedNode && n.index === lockedNode.index);
+  }
+
+  function clearHighlight() {
+    linkSel.classed("dim", false).classed("bright", false);
+    nodeSel.classed("dim", false).classed("locked", false);
+  }
+
+  // Hover + click-to-lock
+  nodeSel
+    .on("mousemove", (event, d) => {
+      // Tooltip always follows mouse
+      let html = `<div class="name">${d.name}</div>`;
+      if (d.kind === "dataset") {
+        html += `<div>${CATEGORIES[d.cat].name}</div>`;
+        html += `<div class="meta">${d.raw.creators.length} creator${d.raw.creators.length===1?"":"s"} · ${d.raw.consumers.length} consumer${d.raw.consumers.length===1?"":"s"}</div>`;
+      } else {
+        const conn = links.filter(l => l.source.index === d.index || l.target.index === d.index).length;
+        html += `<div class="meta">${d.kind === "creator" ? "Creator" : "Consumer"} · ${conn} dataset link${conn===1?"":"s"}</div>`;
+      }
+      if (lockedNode) html += `<div class="meta">Locked — click again to unlock</div>`;
+      tooltip.innerHTML = html;
+      tooltip.style.opacity = "1";
+      tooltip.style.left = (event.clientX + 14) + "px";
+      tooltip.style.top = (event.clientY + 14) + "px";
+
+      // Don't override locked highlight on hover
+      if (lockedNode) return;
+      const {reachable, brightLinks} = computeHighlight(d);
+      applyHighlight(reachable, brightLinks, null);
+    })
+    .on("mouseleave", () => {
+      tooltip.style.opacity = "0";
+      if (lockedNode) {
+        // restore locked highlight
+        const {reachable, brightLinks} = computeHighlight(lockedNode);
+        applyHighlight(reachable, brightLinks, lockedNode);
+      } else {
+        clearHighlight();
+      }
+    })
+    .on("click", (event, d) => {
+      event.stopPropagation();
+      if (lockedNode && lockedNode.index === d.index) {
+        // Click same node again to unlock
+        lockedNode = null;
+        lockedKey = null;
+        clearHighlight();
+      } else {
+        lockedNode = d;
+        lockedKey = {kind: d.kind, name: d.name};
+        const {reachable, brightLinks} = computeHighlight(d);
+        applyHighlight(reachable, brightLinks, d);
+      }
+    });
+
+  // Click empty space to unlock
+  svg.on("click", () => {
+    if (lockedNode) {
+      lockedNode = null;
+      lockedKey = null;
+      clearHighlight();
+    }
+  });
+
+  // After full setup: if there's a locked node from a previous render, restore its highlight
+  if (lockedNode) {
+    const {reachable, brightLinks} = computeHighlight(lockedNode);
+    applyHighlight(reachable, brightLinks, lockedNode);
+  }
+}
+
+// =============================================================================
+// CONTROLS
+// =============================================================================
+
+const controls = document.getElementById("controls");
+Object.entries(CATEGORIES).forEach(([num, c]) => {
+  const b = document.createElement("button");
+  b.className = "chip";
+  b.dataset.cat = num;
+  b.innerHTML = `<span class="swatch" style="background:${c.color}"></span>${c.name}`;
+  controls.appendChild(b);
+});
+
+controls.querySelectorAll(".chip").forEach(chip => {
+  chip.addEventListener("click", () => {
+    controls.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+    chip.classList.add("active");
+    const v = chip.dataset.cat;
+    activeCat = v === "all" ? "all" : Number(v);
+    render();
+  });
+});
+
+const typeControls = document.getElementById("controls-type");
+typeControls.querySelectorAll(".chip-type").forEach(chip => {
+  chip.addEventListener("click", () => {
+    typeControls.querySelectorAll(".chip-type").forEach(c => c.classList.remove("active"));
+    chip.classList.add("active");
+    activeType = chip.dataset.type;
+    render();
+  });
+});
+
+const essentialChip = document.getElementById("chip-essential");
+const thresholdControls = document.getElementById("threshold-controls");
+const thresholdValueEl = document.getElementById("threshold-value");
+const thresholdDown = document.getElementById("threshold-down");
+const thresholdUp = document.getElementById("threshold-up");
+
+function updateThresholdLabel() {
+  thresholdValueEl.textContent = "≤ " + essentialThreshold + " TYPES";
+}
+updateThresholdLabel();
+
+function setEssentialUI() {
+  thresholdControls.style.display = essentialOnly ? "inline-flex" : "none";
+}
+setEssentialUI();
+
+essentialChip.addEventListener("click", () => {
+  essentialOnly = !essentialOnly;
+  essentialChip.classList.toggle("active", essentialOnly);
+  setEssentialUI();
+  render();
+});
+
+thresholdDown.addEventListener("click", (e) => {
+  e.stopPropagation();
+  essentialThreshold = Math.max(1, essentialThreshold - 1);
+  updateThresholdLabel();
+  render();
+});
+
+thresholdUp.addEventListener("click", (e) => {
+  e.stopPropagation();
+  essentialThreshold = Math.min(7, essentialThreshold + 1);
+  updateThresholdLabel();
+  render();
+});
+
+const sideControls = document.getElementById("controls-side");
+sideControls.querySelectorAll(".chip-side").forEach(chip => {
+  chip.addEventListener("click", () => {
+    sideControls.querySelectorAll(".chip-side").forEach(c => c.classList.remove("active"));
+    chip.classList.add("active");
+    sideMode = chip.dataset.side;
+    render(); // reset locked highlight on mode change
+  });
+});
+
+const densityControls = document.getElementById("controls-density");
+densityControls.querySelectorAll(".chip-density").forEach(chip => {
+  chip.addEventListener("click", () => {
+    densityControls.querySelectorAll(".chip-density").forEach(c => c.classList.remove("active"));
+    chip.classList.add("active");
+    density = chip.dataset.density;
+    render();
+  });
+});
+
+const zoomControls = document.getElementById("controls-zoom");
+const zoomValueEl = document.getElementById("zoom-value");
+function updateZoomLabel() {
+  zoomValueEl.textContent = Math.round(zoom * 100) + "%";
+}
+updateZoomLabel();
+zoomControls.querySelectorAll(".chip-zoom").forEach(chip => {
+  chip.addEventListener("click", () => {
+    const action = chip.dataset.zoom;
+    if (action === "in")        zoom = Math.min(3.0, zoom + 0.15);
+    else if (action === "out")  zoom = Math.max(0.4, zoom - 0.15);
+    else if (action === "reset") zoom = 1.0;
+    updateZoomLabel();
+    render();
+  });
+});
+
+// Keyboard shortcuts: + / -  / 0
+window.addEventListener("keydown", (e) => {
+  // Ignore if typing in an input
+  if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+  if (e.key === "+" || e.key === "=") {
+    zoom = Math.min(3.0, zoom + 0.15); updateZoomLabel(); render();
+  } else if (e.key === "-" || e.key === "_") {
+    zoom = Math.max(0.4, zoom - 0.15); updateZoomLabel(); render();
+  } else if (e.key === "0") {
+    zoom = 1.0; updateZoomLabel(); render();
+  }
+});
+
+// About panel
+const aboutToggle = document.getElementById("about-toggle");
+const aboutPanel = document.getElementById("about-panel");
+const aboutClose = document.getElementById("about-close");
+function setAboutOpen(open) {
+  aboutPanel.hidden = !open;
+  aboutToggle.setAttribute("aria-expanded", open ? "true" : "false");
+  aboutToggle.textContent = open ? "Hide" : "How to use this";
+}
+aboutToggle.addEventListener("click", () => setAboutOpen(aboutPanel.hidden));
+aboutClose.addEventListener("click", () => setAboutOpen(false));
+
+render();
+window.addEventListener("resize", () => {
+  // simple full re-render on resize
+  // (W is read at the top of render via closure-style—rebuild on resize)
+  location.reload();
+});
+</script>
+</body>
+</html>
