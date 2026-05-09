@@ -473,7 +473,8 @@ const ON_SET_DATA = {
                                 "Editorial",
                                 "Script Supervisor",
                                 "VFX Data Wrangler",
-                                "VFX Dpm"
+                                "VFX Dpm",
+                                "VFX Editorial"
                             ],
                             "VFXTypes": [
                                 "Complex VFX",
