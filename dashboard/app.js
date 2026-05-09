@@ -449,7 +449,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         consumers: consumers,
                         scope: scope,
                         vfxTypes: vfxTypes,
-                        original: item
+                        original: item,
+                        searchString: (h1.title + ' ' + h2.title + ' ' + JSON.stringify(item)).toLowerCase()
                     });
                 });
             });
@@ -542,8 +543,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const filteredItems = specsFlatList.filter(item => {
             if (state.filters.search) {
-                const jsonStr = JSON.stringify(item.original).toLowerCase();
-                if (!jsonStr.includes(state.filters.search)) return false;
+                if (!item.searchString.includes(state.filters.search)) return false;
             }
             if (state.filters.creators.size > 0 && !item.creators.some(c => state.filters.creators.has(c))) return false;
             if (state.filters.consumers.size > 0 && !item.consumers.some(c => state.filters.consumers.has(c))) return false;
