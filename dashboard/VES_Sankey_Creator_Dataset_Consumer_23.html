@@ -6,7 +6,6 @@
   <title>VES On-Set Data — Creator → Dataset → Consumer</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="https://unpkg.com/d3-sankey@0.12.3/dist/d3-sankey.min.js"></script>
-  <script src="../data/data.js"></script>
   <style>
     :root {
       --bg: #0A0A0A;
@@ -466,11 +465,11 @@
       "#C8B27D", "#8FBFE2", "#D89BB9", "#9FCB87",
     ];
 
-    function buildDatasetsFromSource() {
+    function buildDatasetsFromSource(sourceData) {
       const datasets = [];
       const categories = {};
 
-      const sections = ON_SET_DATA["Data Sets"] || [];
+      const sections = sourceData["Data Sets"] || [];
       // The first entry ("0. Common Parameters") has no subsections with items;
       // we still assign it cat=1 index-wise but it will produce no entries.
       sections.forEach((section, sIdx) => {
@@ -506,7 +505,8 @@
       return { datasets, categories };
     }
 
-    const { datasets: DATASETS, categories: CATEGORIES } = buildDatasetsFromSource();
+    let DATASETS = [];
+    let CATEGORIES = {};
 
     // --- legacy CATEGORIES object kept below for reference; now generated above ---
     /*
@@ -1355,27 +1355,8 @@
     }
 
     // =============================================================================
-    // CONTROLS
+    // CONTROLS — non-data-dependent listeners (wired immediately)
     // =============================================================================
-
-    const controls = document.getElementById("controls");
-    Object.entries(CATEGORIES).forEach(([num, c]) => {
-      const b = document.createElement("button");
-      b.className = "chip";
-      b.dataset.cat = num;
-      b.innerHTML = `<span class="swatch" style="background:${c.color}"></span>${c.name}`;
-      controls.appendChild(b);
-    });
-
-    controls.querySelectorAll(".chip").forEach(chip => {
-      chip.addEventListener("click", () => {
-        controls.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
-        chip.classList.add("active");
-        const v = chip.dataset.cat;
-        activeCat = v === "all" ? "all" : Number(v);
-        render();
-      });
-    });
 
     const typeControls = document.getElementById("controls-type");
     typeControls.querySelectorAll(".chip-type").forEach(chip => {
@@ -1430,7 +1411,7 @@
         sideControls.querySelectorAll(".chip-side").forEach(c => c.classList.remove("active"));
         chip.classList.add("active");
         sideMode = chip.dataset.side;
-        render(); // reset locked highlight on mode change
+        render();
       });
     });
 
@@ -1461,9 +1442,8 @@
       });
     });
 
-    // Keyboard shortcuts: + / -  / 0
+    // Keyboard shortcuts: + / - / 0
     window.addEventListener("keydown", (e) => {
-      // Ignore if typing in an input
       if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
       if (e.key === "+" || e.key === "=") {
         zoom = Math.min(3.0, zoom + 0.15); updateZoomLabel(); render();
@@ -1486,12 +1466,50 @@
     aboutToggle.addEventListener("click", () => setAboutOpen(aboutPanel.hidden));
     aboutClose.addEventListener("click", () => setAboutOpen(false));
 
-    render();
-    window.addEventListener("resize", () => {
-      // simple full re-render on resize
-      // (W is read at the top of render via closure-style—rebuild on resize)
-      location.reload();
-    });
+    // =============================================================================
+    // ASYNC INIT — fetch data.json then wire up category chips and render
+    // =============================================================================
+
+    fetch('../data/data.json')
+      .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(sourceData => {
+        const built = buildDatasetsFromSource(sourceData);
+        DATASETS = built.datasets;
+        CATEGORIES = built.categories;
+
+        // Build category filter chips from loaded data
+        const controls = document.getElementById("controls");
+        Object.entries(CATEGORIES).forEach(([num, c]) => {
+          const b = document.createElement("button");
+          b.className = "chip";
+          b.dataset.cat = num;
+          b.innerHTML = `<span class="swatch" style="background:${c.color}"></span>${c.name}`;
+          controls.appendChild(b);
+        });
+
+        controls.querySelectorAll(".chip").forEach(chip => {
+          chip.addEventListener("click", () => {
+            controls.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+            chip.classList.add("active");
+            const v = chip.dataset.cat;
+            activeCat = v === "all" ? "all" : Number(v);
+            render();
+          });
+        });
+
+        render();
+        window.addEventListener("resize", () => location.reload());
+      })
+      .catch(e => {
+        console.error('Failed to load data.json:', e);
+        d3.select('#chart')
+          .attr('width', 700).attr('height', 80)
+          .append('text')
+          .attr('x', 20).attr('y', 40)
+          .attr('fill', '#EDE8E0')
+          .style('font-size', '16px')
+          .text('Error loading data. Serve via HTTP — e.g. python3 -m http.server 8080');
+      });
   </script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-FDWGQLTRBV"></script>
   <script>

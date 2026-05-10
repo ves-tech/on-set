@@ -1,0 +1,88 @@
+# VES On-Set VFX Data Collection and Usage Guide
+
+> A structured, machine-readable reference published by the VES Technology Committee
+> describing which on-set data is collected, by whom, and which downstream VFX
+> departments and vendors consume it. Covers 50+ dataset types across 16 categories
+> including camera, scanning, colour reference, motion capture, LED volume, and more.
+>
+> Published under Creative Commons CC-BY 4.0.
+> Site: https://ves-on-set-data.org
+
+## Key data resources
+
+- [Structured dataset JSON](https://ves-on-set-data.org/data/data.json): Complete machine-readable dataset — the canonical source of truth. Contains all 50+ data-set entries, each with Creator, Consumer, Scope, VFXTypes, and descriptive text fields.
+- [Directory structure JSON](https://ves-on-set-data.org/data/directory_data.json): Recommended VFX hub filesystem tree (FINISHING_DIRECTORY, VFX_DIRECTORY, VFX_LOCAL) as a nested JSON array.
+- [Directory structure YAML](https://ves-on-set-data.org/data/directory_structure.yaml): Same filesystem tree in YAML format.
+- [Full guide PDF](https://ves-on-set-data.org/data/On-Set_VFX_Data_Collection_and_Usage_Guide_v1.0.0.pdf): The original VES document — best for citation and full narrative context.
+
+## Interactive tools
+
+- [Dataset browser](https://ves-on-set-data.org/dashboard/index.html): Filterable grid of all datasets with Creator / Consumer / Scope / VFX-type facets.
+- [Sankey flow diagram](https://ves-on-set-data.org/dashboard/VES_Sankey_Creator_Dataset_Consumer_23.html): Creator → Dataset → Consumer relationship visualisation.
+
+## data.json structure
+
+The top-level JSON object has these keys:
+
+- `version` — guide version string (e.g. "1.0.0")
+- `publishDate` — ISO date string
+- `Introduction` — array of `{html}` blocks
+- `Scope Definitions` — array of `{term: definition}` objects
+- `Data Sets` — **primary data** — array of section objects (see below)
+- `Directory Structure` — intro HTML + `{type: "tree_view"}` marker
+- `Reference Docs` — array of `{html}` blocks with external links
+- `Feedback` — array of `{html}` blocks
+
+### Data Sets section structure
+
+Each entry in `Data Sets` is a **section** (H1 in the guide):
+
+```json
+{
+  "title": "1. Camera & Lens Data",
+  "subsections": [
+    {
+      "title": "1.1 Manual Camera Data Collection",
+      "items": [
+        {
+          "Data Collected": ["Roll, slate, take", "Lens, f-stop, ..."],
+          "Description": "...",
+          "Usage": "...",
+          "Scope": ["Shot", "Take"],
+          "Creator": ["Data wrangler", "Camera department"],
+          "Consumer": ["VFX Post Vendor", "Dailies and DI Vendor"],
+          "VFXTypes": ["Basic 2D VFX", "Basic 3D VFX", "Complex VFX"]
+        }
+      ]
+    }
+  ]
+}
+```
+
+## Dataset categories (16 sections)
+
+1. Camera & Lens Data
+2. Witness Cameras & Reference Video
+3. Production Reports & Metadata
+4. Colour & Lighting Reference
+5. Set, Prop, and Actor Scans
+6. Camera Rig & Technical Specs
+7. Vendor & Pre-Production Data from VFX Vendor to Production
+8. Mocap Data
+9. Camera Tracking & Sync
+10. LED Volume & Environment Data
+11. Scene Metadata & Notes
+12. Audio & Sync Data
+13. Data from Other Production Departments
+14. Data Shared with VFX Vendors During Principal Photography
+15. Data Management, Tracking, and Review
+16. Plate Deliverables
+
+## VFX Types covered
+
+Basic 2D VFX · Basic 3D VFX · Character VFX · Digital Matte Painting · Complex VFX · Motion Capture · Virtual Production · Real-time
+
+## Authors
+
+Web dashboard by Sam Richards.
+On-set guide by Sheena Duggal with contributions from Sam Richards, Jim Geduldick, Jake Morrison, and Jean-Francois Panisset.

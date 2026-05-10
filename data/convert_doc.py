@@ -494,7 +494,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Convert Google Doc HTML export to JSON data for On-Set Dashboard.")
     parser.add_argument("--doc-id", help="Google Doc ID to download automatically (e.g. 13TsptYa5uNO52btOw1nat1cLSBG88t27W3BXHBZPvoc)")
     parser.add_argument("--input", default="data/doc_export.html", help="Input HTML file path (default: data/doc_export.html)")
-    parser.add_argument("--output", default="data/data.js", help="Output JSON/JS file path (default: data/data.js)")
+    parser.add_argument("--output", default="data/data.json", help="Output JSON file path (default: data/data.json)")
     
     args = parser.parse_args()
     
@@ -584,24 +584,20 @@ if __name__ == "__main__":
                 f.write(yaml_content)
             print(f"Directory structure saved to {yaml_output_file}")
             
-            # Update directory_data.js to include the YAML content as a string
-            # This allows the frontend to trigger a proper download even on file:// protocol
-            dir_output_file = os.path.join(os.path.dirname(output_file), "directory_data.js")
+            # Write directory tree as pure JSON (no JS wrapper)
+            dir_output_file = os.path.join(os.path.dirname(output_file), "directory_data.json")
             with open(dir_output_file, 'w', encoding='utf-8') as f:
-                dir_js_content = f"const DIRECTORY_DATA = {json.dumps(directory_tree, indent=4)};\n"
-                dir_js_content += f"const DIRECTORY_YAML = {json.dumps(yaml_content)};"
-                f.write(dir_js_content)
-            print(f"Directory data (and YAML) saved to {dir_output_file}")
+                f.write(json.dumps(directory_tree, indent=4))
+            print(f"Directory data saved to {dir_output_file}")
             
         # Ensure the output directory exists
         output_dir = os.path.dirname(output_file)
         if output_dir and not os.path.exists(output_dir):
             os.makedirs(output_dir)
 
-        # Write main JS file
+        # Write main JSON file (pure JSON, no JS wrapper)
         with open(output_file, 'w', encoding='utf-8') as f:
-            js_content = f"const ON_SET_DATA = {json.dumps(json_data, indent=4)};"
-            f.write(js_content)
+            f.write(json.dumps(json_data, indent=4))
             
         
         print(f"Successfully converted to {output_file}")
