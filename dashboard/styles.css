@@ -545,26 +545,25 @@ h1 {
     .top-bar,
     .tab-nav,
     #filter-container,
-    .tree-controls {
+    .tree-controls,
+    .header-banner,
+    .header-logo {
         display: none !important;
     }
 
-    /* Repeat header on every page */
+    /* Header — static so it appears once on page 1 without overlapping
+       content on subsequent pages (position:fixed caused overlap on pages 2+) */
     .site-header {
         display: block !important;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
+        position: static;
         background: white;
         border-bottom: 2px solid black;
-        z-index: 1000;
         padding-left: 0;
-        border-bottom: 2px solid black;
     }
 
     .site-header h1 {
         color: black !important;
+        font-size: 80%;
     }
 
     .version-info {
@@ -643,8 +642,6 @@ h1 {
         overflow: visible;
         background-color: white;
         color: black;
-        margin-top: 4rem;
-        /* Make space for fixed header */
     }
 
     .app-container {
@@ -664,6 +661,11 @@ h1 {
         /* Print as list usually better */
         grid-template-columns: 1fr;
         padding-bottom: 0;
+    }
+
+    /* Keep section headings attached to the first card that follows */
+    .section-h1 {
+        break-after: avoid;
     }
 
     /* Card styling for print */
