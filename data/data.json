@@ -1,4 +1,4 @@
-const ON_SET_DATA = {
+{
     "version": "1.0.0",
     "publishDate": "2026-02-20",
     "Introduction": [
@@ -2587,4 +2587,4 @@ const ON_SET_DATA = {
             "html": "<div class='text-block-feedback'><p>Feedback and insights on additional data sources not encompassed by this initial version are encouraged, recognizing that each project will bring unique processes and data requirements. Specifically 3D stereo conversion is not currently covered. Please send email to <a href=\"mailto:ves-tech-onset@googlegroups.com\">ves-tech-onset@</a><a href=\"mailto:ves-tech-onset@googlegroups.com\">googlegroups.com</a></p></div>"
         }
     ]
-};
+}

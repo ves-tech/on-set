@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     let rawData = {};
+    let directoryData = [];
     let specsFlatList = []; // Nested specs flattened for easy filtering
 
     // State
@@ -170,9 +171,22 @@ document.addEventListener('DOMContentLoaded', () => {
         if (vfxTypes) vfxTypes.split(',').forEach(s => state.filters.vfxTypes.add(s));
     }
 
-    // Initialize
-    if (typeof ON_SET_DATA !== 'undefined') {
-        rawData = ON_SET_DATA;
+    // Initialize — async fetch of JSON data files
+    (async () => {
+        try {
+            const [dataRes, dirRes] = await Promise.all([
+                fetch('../data/data.json'),
+                fetch('../data/directory_data.json')
+            ]);
+            if (!dataRes.ok) throw new Error(`data.json: ${dataRes.status}`);
+            if (!dirRes.ok) throw new Error(`directory_data.json: ${dirRes.status}`);
+            rawData = await dataRes.json();
+            directoryData = await dirRes.json();
+        } catch (e) {
+            console.error('Error loading data:', e);
+            dom.stats.textContent = 'Error loading data. Tip: serve via HTTP (e.g. python3 -m http.server 8080).';
+            return;
+        }
 
         // Parse Scope Definitions
         if (rawData['Scope Definitions']) {
@@ -199,10 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loadStateFromUrl();
         renderFilters();
         switchTab(state.currentTab);
-    } else {
-        console.error('Error: ON_SET_DATA not found.');
-        dom.stats.textContent = 'Error loading data.';
-    }
+    })();
 
     // Tabs Event Listeners
     dom.tabs.forEach(btn => {
@@ -255,7 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = rawData[sectionName] || [];
 
         // Directory Tree
-        if (sectionName === "Directory Structure" && typeof DIRECTORY_DATA !== 'undefined') {
+        if (sectionName === "Directory Structure" && directoryData.length > 0) {
             
             // Render any HTML intro blocks
             const textContainer = document.createElement('div');
@@ -348,7 +359,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
 
-            buildTree(DIRECTORY_DATA, rootUl);
+            buildTree(directoryData, rootUl);
             treeContainer.appendChild(rootUl);
             dom.grid.appendChild(treeContainer);
             return;

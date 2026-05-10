@@ -20,7 +20,7 @@ Run the converter with the Google Doc ID:
 ```bash
 python3 data/convert_doc.py --doc-id 13TsptYa5uNO52btOw1nat1cLSBG88t27W3BXHBZPvoc
 ```
-This will automatically download the HTML export and update `data.js`.
+This will automatically download the HTML export and update `data/data.json` and `data/directory_data.json`.
 
 ### Option 2: Manual Import
 1.  **Export the Google Doc**:
@@ -36,7 +36,17 @@ This will automatically download the HTML export and update `data.js`.
     ```
 
 ## Running the Dashboard
-Simply open `dashboard/index.html` in your web browser. No server is required.
+
+The dashboard now loads data via `fetch()`, so a local HTTP server is required:
+
+```bash
+python3 -m http.server 8080
+```
+
+Then open **http://localhost:8080/dashboard/index.html** in your browser.
+
+> [!NOTE]
+> Opening `dashboard/index.html` directly as a `file://` URL will no longer work because browsers block `fetch()` requests on the `file://` protocol.
 
 ## Authors
 

@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# Primary machine-readable data files
+Allow: /data/data.json
+Allow: /data/directory_data.json
+Allow: /data/directory_structure.yaml
+
+# LLM entry point
+Allow: /llms.txt
+
+Sitemap: https://ves-on-set-data.org/sitemap.xml
