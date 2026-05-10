@@ -6,6 +6,7 @@
   <title>VES On-Set Data — Creator → Dataset → Consumer</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="https://unpkg.com/d3-sankey@0.12.3/dist/d3-sankey.min.js"></script>
+  <script src="../data/data.js"></script>
   <style>
     :root {
       --bg: #0A0A0A;
@@ -441,10 +442,75 @@
 
   <script>
     // =============================================================================
-    // DATA — extracted from VES On-Set VFX Data Collection and Usage Guide v1.0.0
+    // DATA — derived dynamically from ON_SET_DATA in data.js
     // =============================================================================
 
-    const DATASETS = [
+    // Map from full VFXType strings in data.js → short tokens used by the filters
+    const VFX_TYPE_MAP = {
+      "Basic 2D VFX":        "Basic 2D",
+      "Basic 3D VFX":        "Basic 3D",
+      "Character VFX":       "Character",
+      "Digital Matte Painting": "Matte Painting",
+      "Complex VFX":         "Complex",
+      "Motion Capture":      "Mocap",
+      "Virtual Production":  "VP",
+      "Real time":           "Real-time",
+      "Real-time":           "Real-time",
+    };
+
+    // Palette for the 16 category bands (same colours as before)
+    const CAT_COLOURS = [
+      "#E8B04A", "#D9836F", "#9DBE8C", "#F2D27A",
+      "#7FB3CF", "#C49ECF", "#E0A06A", "#7AB8A6",
+      "#B6B0DE", "#E07F7F", "#9DD3B0", "#D6A5C9",
+      "#C8B27D", "#8FBFE2", "#D89BB9", "#9FCB87",
+    ];
+
+    function buildDatasetsFromSource() {
+      const datasets = [];
+      const categories = {};
+
+      const sections = ON_SET_DATA["Data Sets"] || [];
+      // The first entry ("0. Common Parameters") has no subsections with items;
+      // we still assign it cat=1 index-wise but it will produce no entries.
+      sections.forEach((section, sIdx) => {
+        const catNum = sIdx + 1;          // 1-based to match original
+        const catName = section.title || `Category ${catNum}`;
+        const colour = CAT_COLOURS[(sIdx) % CAT_COLOURS.length];
+        categories[catNum] = { name: catName, color: colour };
+
+        (section.subsections || []).forEach(sub => {
+          // Skip blank spacer subsections
+          if (!sub.title || sub.title.trim() === "") return;
+
+          // Parse "1.1 Manual Camera Data Collection" → id="1.1", name="Manual…"
+          const titleMatch = sub.title.match(/^(\d+(?:\.\d+)?)\s+(.+)$/);
+          const id   = titleMatch ? titleMatch[1] : sub.title;
+          const name = titleMatch ? titleMatch[2] : sub.title;
+
+          // Take data from the first (usually only) item
+          const item = (sub.items || [])[0];
+          if (!item) return;
+
+          const creators  = (item["Creator"]   || []);
+          const consumers = (item["Consumer"]  || []);
+          const rawTypes  = (item["VFXTypes"]  || []);
+          const vfxTypes  = rawTypes
+            .map(t => VFX_TYPE_MAP[t] || t)
+            .filter((v, i, a) => a.indexOf(v) === i);  // deduplicate
+
+          datasets.push({ id, name, cat: catNum, creators, consumers, vfxTypes });
+        });
+      });
+
+      return { datasets, categories };
+    }
+
+    const { datasets: DATASETS, categories: CATEGORIES } = buildDatasetsFromSource();
+
+    // --- legacy CATEGORIES object kept below for reference; now generated above ---
+    /*
+    const CATEGORIES = {
       // 1. Camera & Lens Data
       {
         id: "1.1", name: "Manual Camera Data Collection", cat: 1,
@@ -874,24 +940,8 @@
       },
     ];
 
-    const CATEGORIES = {
-      1: { name: "1. Camera & Lens Data", color: "#E8B04A" },
-      2: { name: "2. Witness Cameras & Ref Video", color: "#D9836F" },
-      3: { name: "3. Production Reports", color: "#9DBE8C" },
-      4: { name: "4. Colour & Lighting Reference", color: "#F2D27A" },
-      5: { name: "5. Set, Prop & Actor Scans", color: "#7FB3CF" },
-      6: { name: "6. Camera Rig & Tech Specs", color: "#C49ECF" },
-      7: { name: "7. Vendor / Pre-Production", color: "#E0A06A" },
-      8: { name: "8. Mocap Data", color: "#7AB8A6" },
-      9: { name: "9. Camera Tracking & Sync", color: "#B6B0DE" },
-      10: { name: "10. LED Volume & Environment", color: "#E07F7F" },
-      11: { name: "11. Scene Metadata & Notes", color: "#9DD3B0" },
-      12: { name: "12. Audio & Sync", color: "#D6A5C9" },
-      13: { name: "13. Other Production Depts", color: "#C8B27D" },
-      14: { name: "14. Data Shared w/ Vendors", color: "#8FBFE2" },
-      15: { name: "15. Data Mgmt, Tracking, Review", color: "#D89BB9" },
-      16: { name: "16. Plate Deliverables", color: "#9FCB87" },
-    };
+    */
+    // CATEGORIES is now populated by buildDatasetsFromSource() above.
 
     // =============================================================================
     // BUILD SANKEY DATA
