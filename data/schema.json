@@ -1,0 +1,192 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://ves-on-set-data.org/schema/data.schema.json",
+    "title": "VES On-Set VFX Data Collection Guide",
+    "description": "Schema for data.json produced by data/convert_doc.py from the canonical Google Doc.",
+    "type": "object",
+    "required": [
+        "version",
+        "publishDate",
+        "Introduction",
+        "Scope Definitions",
+        "VFX Types",
+        "Data Sets",
+        "Directory Structure",
+        "Reference Docs",
+        "Feedback"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "version": {
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$",
+            "description": "Semantic version of the source document."
+        },
+        "publishDate": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "description": "ISO-8601 publication date of the source document."
+        },
+        "Introduction": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/htmlBlock" },
+            "minItems": 1
+        },
+        "Scope Definitions": {
+            "type": "array",
+            "items": {
+                "anyOf": [
+                    { "$ref": "#/$defs/htmlBlock" },
+                    { "$ref": "#/$defs/definitionsTable" }
+                ]
+            }
+        },
+        "VFX Types": {
+            "type": "array",
+            "items": {
+                "anyOf": [
+                    { "$ref": "#/$defs/htmlBlock" },
+                    { "$ref": "#/$defs/definitionsTable" }
+                ]
+            }
+        },
+        "Data Sets": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/section" }
+        },
+        "Directory Structure": {
+            "type": "array",
+            "items": {
+                "oneOf": [
+                    { "$ref": "#/$defs/htmlBlock" },
+                    {
+                        "type": "object",
+                        "required": ["type"],
+                        "additionalProperties": false,
+                        "properties": {
+                            "type": { "const": "tree_view" }
+                        }
+                    }
+                ]
+            }
+        },
+        "Reference Docs": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/htmlBlock" },
+            "minItems": 1
+        },
+        "Feedback": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/htmlBlock" },
+            "minItems": 1
+        }
+    },
+    "$defs": {
+        "htmlBlock": {
+            "type": "object",
+            "required": ["html"],
+            "additionalProperties": false,
+            "properties": {
+                "html": {
+                    "type": "string",
+                    "minLength": 1
+                }
+            }
+        },
+        "definitionsTable": {
+            "description": "Key-value definitions table where each key is a term and the value is its definition (string) or a list of related terms.",
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+                "oneOf": [
+                    { "type": "string", "minLength": 1 },
+                    {
+                        "type": "array",
+                        "items": { "type": "string", "minLength": 1 },
+                        "minItems": 1
+                    }
+                ]
+            }
+        },
+        "section": {
+            "type": "object",
+            "required": ["title", "subsections"],
+            "additionalProperties": false,
+            "properties": {
+                "title": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "subsections": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/subsection" }
+                }
+            }
+        },
+        "subsection": {
+            "type": "object",
+            "required": ["title", "items"],
+            "additionalProperties": false,
+            "properties": {
+                "title": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "items": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/dataEntry" }
+                }
+            }
+        },
+        "dataEntry": {
+            "description": "A single data-collection entry inside a subsection.",
+            "type": "object",
+            "required": [
+                "Data Collected",
+                "Description",
+                "Usage",
+                "Scope",
+                "Creator",
+                "Consumer",
+                "VFXTypes"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "Data Collected": {
+                    "type": "array",
+                    "items": { "type": "string", "minLength": 1 },
+                    "minItems": 1
+                },
+                "Description": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "Usage": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "Scope": {
+                    "type": "array",
+                    "items": { "type": "string", "minLength": 1 },
+                    "minItems": 1
+                },
+                "Creator": {
+                    "type": "array",
+                    "items": { "type": "string", "minLength": 1 },
+                    "minItems": 1
+                },
+                "Consumer": {
+                    "type": "array",
+                    "items": { "type": "string", "minLength": 1 },
+                    "minItems": 1
+                },
+                "VFXTypes": {
+                    "type": "array",
+                    "items": { "type": "string", "minLength": 1 },
+                    "minItems": 1
+                }
+            }
+        }
+    }
+}

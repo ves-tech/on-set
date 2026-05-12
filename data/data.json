@@ -103,10 +103,6 @@
                     ]
                 },
                 {
-                    "title": "",
-                    "items": []
-                },
-                {
                     "title": "1.2 Camera Type & Model",
                     "items": [
                         {
@@ -151,10 +147,6 @@
                     ]
                 },
                 {
-                    "title": "",
-                    "items": []
-                },
-                {
                     "title": "1.3 Per take Sensor Metadata",
                     "items": [
                         {
@@ -190,10 +182,6 @@
                             ]
                         }
                     ]
-                },
-                {
-                    "title": "",
-                    "items": []
                 },
                 {
                     "title": "1.4 Per Camera Lens Specifications",
@@ -232,10 +220,6 @@
                             ]
                         }
                     ]
-                },
-                {
-                    "title": "",
-                    "items": []
                 },
                 {
                     "title": "1.5 Lens Encoder Tracking Data",
@@ -343,10 +327,6 @@
                     ]
                 },
                 {
-                    "title": "",
-                    "items": []
-                },
-                {
                     "title": "2.2 Overhead & Wide-Angle BTS Coverage",
                     "items": [
                         {
@@ -376,10 +356,6 @@
                             ]
                         }
                     ]
-                },
-                {
-                    "title": "",
-                    "items": []
                 },
                 {
                     "title": "2.3 Real-World Depth Information",
@@ -658,10 +634,6 @@
                     ]
                 },
                 {
-                    "title": "",
-                    "items": []
-                },
-                {
                     "title": "4.2 HDRIs",
                     "items": [
                         {
@@ -722,10 +694,6 @@
                             ]
                         }
                     ]
-                },
-                {
-                    "title": "",
-                    "items": []
                 },
                 {
                     "title": "4.4 DMX/Lighting Control Metadata",
@@ -997,10 +965,6 @@
                     ]
                 },
                 {
-                    "title": "",
-                    "items": []
-                },
-                {
                     "title": "5.6 Set Reference Photography",
                     "items": [
                         {
@@ -1031,10 +995,6 @@
                     ]
                 },
                 {
-                    "title": "",
-                    "items": []
-                },
-                {
                     "title": "5.7 Costume, Face Marker, and T-Pose Reference",
                     "items": [
                         {
@@ -1062,10 +1022,6 @@
                             ]
                         }
                     ]
-                },
-                {
-                    "title": "",
-                    "items": []
                 },
                 {
                     "title": "5.8 Reference of Vehicles, Props, Production Locations",
@@ -1101,10 +1057,6 @@
                             ]
                         }
                     ]
-                },
-                {
-                    "title": "",
-                    "items": []
                 }
             ]
         },
@@ -1147,10 +1099,6 @@
                     ]
                 },
                 {
-                    "title": "",
-                    "items": []
-                },
-                {
                     "title": "6.2 DIT Specs",
                     "items": [
                         {
@@ -1185,10 +1133,6 @@
                     ]
                 },
                 {
-                    "title": "",
-                    "items": []
-                },
-                {
                     "title": "6.3 Lens Specification",
                     "items": [
                         {
@@ -1218,10 +1162,6 @@
                             ]
                         }
                     ]
-                },
-                {
-                    "title": "",
-                    "items": []
                 }
             ]
         },
@@ -1270,10 +1210,6 @@
                     ]
                 },
                 {
-                    "title": "",
-                    "items": []
-                },
-                {
                     "title": "7.2 Concept Art, Lookdev, Character Designs, R&D, Storyboards",
                     "items": [
                         {
@@ -1308,10 +1244,6 @@
                             ]
                         }
                     ]
-                },
-                {
-                    "title": "",
-                    "items": []
                 }
             ]
         },
@@ -1349,10 +1281,6 @@
                     ]
                 },
                 {
-                    "title": "",
-                    "items": []
-                },
-                {
                     "title": "8.2 Performance Capture Facial Tracking",
                     "items": [
                         {
@@ -1378,10 +1306,6 @@
                             ]
                         }
                     ]
-                },
-                {
-                    "title": "",
-                    "items": []
                 },
                 {
                     "title": "8.3 Hand/Finger Tracking",
@@ -1417,10 +1341,6 @@
                     ]
                 },
                 {
-                    "title": "",
-                    "items": []
-                },
-                {
                     "title": "8.4 Raw Animation Data & Retargeting Settings",
                     "items": [
                         {
@@ -1454,10 +1374,6 @@
                     ]
                 },
                 {
-                    "title": "",
-                    "items": []
-                },
-                {
                     "title": "8.5 Motion Capture Volume Data",
                     "items": [
                         {
@@ -1482,10 +1398,6 @@
                             ]
                         }
                     ]
-                },
-                {
-                    "title": "",
-                    "items": []
                 }
             ]
         },
@@ -1571,10 +1483,6 @@
                     ]
                 },
                 {
-                    "title": "",
-                    "items": []
-                },
-                {
                     "title": "9.3 IMU Data",
                     "items": [
                         {
@@ -1606,10 +1514,6 @@
                             ]
                         }
                     ]
-                },
-                {
-                    "title": "",
-                    "items": []
                 }
             ]
         },
@@ -1649,10 +1553,6 @@
                     ]
                 },
                 {
-                    "title": "",
-                    "items": []
-                },
-                {
                     "title": "10.2 Display Frustum Calibration",
                     "items": [
                         {
@@ -1679,10 +1579,6 @@
                             ]
                         }
                     ]
-                },
-                {
-                    "title": "",
-                    "items": []
                 },
                 {
                     "title": "10.3 Colour Profile & Brightness Settings",
@@ -1717,10 +1613,6 @@
                     ]
                 },
                 {
-                    "title": "",
-                    "items": []
-                },
-                {
                     "title": "10.4 Latency Data",
                     "items": [
                         {
@@ -1748,10 +1640,6 @@
                             ]
                         }
                     ]
-                },
-                {
-                    "title": "",
-                    "items": []
                 },
                 {
                     "title": "10.5 Plate vs. Real-Time Rendered Assets",
@@ -1784,10 +1672,6 @@
                             ]
                         }
                     ]
-                },
-                {
-                    "title": "",
-                    "items": []
                 }
             ]
         },
@@ -1823,10 +1707,6 @@
                     ]
                 },
                 {
-                    "title": "",
-                    "items": []
-                },
-                {
                     "title": "11.2 Virtual Production Operator Metadata",
                     "items": [
                         {
@@ -1852,10 +1732,6 @@
                             ]
                         }
                     ]
-                },
-                {
-                    "title": "",
-                    "items": []
                 },
                 {
                     "title": "11.3 On-Set Real-Time Adjustments",
@@ -1885,10 +1761,6 @@
                             ]
                         }
                     ]
-                },
-                {
-                    "title": "",
-                    "items": []
                 }
             ]
         },
@@ -1928,10 +1800,6 @@
                     ]
                 },
                 {
-                    "title": "",
-                    "items": []
-                },
-                {
                     "title": "12.2 Spatial Audio Tracking Metadata",
                     "items": [
                         {
@@ -1957,10 +1825,6 @@
                             ]
                         }
                     ]
-                },
-                {
-                    "title": "",
-                    "items": []
                 },
                 {
                     "title": "12.3 Lip sync and character audio",
@@ -1992,10 +1856,6 @@
                             ]
                         }
                     ]
-                },
-                {
-                    "title": "",
-                    "items": []
                 }
             ]
         },
@@ -2034,10 +1894,6 @@
                     ]
                 },
                 {
-                    "title": "",
-                    "items": []
-                },
-                {
                     "title": "13.2 Mudmaps",
                     "items": [
                         {
@@ -2069,10 +1925,6 @@
                             ]
                         }
                     ]
-                },
-                {
-                    "title": "",
-                    "items": []
                 },
                 {
                     "title": "13.3 Storyboards, Previz, Techviz, Stuntviz",
@@ -2117,10 +1969,6 @@
                             ]
                         }
                     ]
-                },
-                {
-                    "title": "",
-                    "items": []
                 },
                 {
                     "title": "13.4 Art Department Assets",
@@ -2170,10 +2018,6 @@
                             ]
                         }
                     ]
-                },
-                {
-                    "title": "",
-                    "items": []
                 }
             ]
         },
@@ -2212,10 +2056,6 @@
                     ]
                 },
                 {
-                    "title": "",
-                    "items": []
-                },
-                {
                     "title": "14.2 Lens Grid and Reference Specs",
                     "items": [
                         {
@@ -2247,10 +2087,6 @@
                             ]
                         }
                     ]
-                },
-                {
-                    "title": "",
-                    "items": []
                 }
             ]
         },
@@ -2286,10 +2122,6 @@
                             ]
                         }
                     ]
-                },
-                {
-                    "title": "",
-                    "items": []
                 },
                 {
                     "title": "15.2 Descriptive File Naming",
@@ -2335,10 +2167,6 @@
                             ]
                         }
                     ]
-                },
-                {
-                    "title": "",
-                    "items": []
                 },
                 {
                     "title": "15.3 Review Tools",
