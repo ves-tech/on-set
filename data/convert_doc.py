@@ -177,13 +177,16 @@ def parse_google_doc_html(html_path, output_css_path=None):
 
         if el.name == 'h1':
             in_tree = False
-            if text in ["Introduction", "Scope Definitions", "17. Reference Documents", "Feedback"] or "Directory Structure" in text:
+            if text in ["Introduction", "Scope Definitions", "17. Reference Documents", "Feedback", "VFX Types"] or "Directory Structure" in text:
                 if "17." in text: # specific check for Ref docs to normalize key if needed, or just use text
                      current_h1_obj = {"title": "Reference Docs", "special": True}
                 elif "Directory Structure" in text:
                      current_h1_obj = {"title": "Directory Structure", "special": True}
                 else:
                      current_h1_obj = {"title": text, "special": True}
+                
+                if current_h1_obj["title"] not in output:
+                    output[current_h1_obj["title"]] = []
                 current_h2_obj = None
             else:
                 current_h1_obj = {
@@ -278,7 +281,7 @@ def parse_google_doc_html(html_path, output_css_path=None):
 
                  # Special deduplication for Scope Definitions:
                  # If we are in Scope Definitions, and the text matches a Key or Value from a previously parsed table, skip it.
-                 if current_h1_obj and current_h1_obj["title"] == "Scope Definitions":
+                 if current_h1_obj and current_h1_obj["title"] in ["Scope Definitions", "VFX Types"]:
                      is_duplicate = False
                      # Iterate over existing items in this section (which might include the Table parsed earlier)
                      for item in target_list:
@@ -399,8 +402,20 @@ def parse_google_doc_html(html_path, output_css_path=None):
                         item["VFXTypes"] = target_types
 
     # Post-process Merge HTML blocks
-    for section in ["Introduction", "Reference Docs", "Feedback", "Directory Structure"]:
+    for section in ["Introduction", "Reference Docs", "Feedback", "Directory Structure", "VFX Types"]:
         if output.get(section): # Safely get
+            # If it's a list of dictionaries (from tables), we might want to keep it as is or convert to HTML
+            # The current logic for special sections assumes they contain {"html": "..."} or tables.
+            # Let's see if we should merge them or keep them as structured data.
+            # For VFX Types, it might be better to keep it structured if it's a table.
+            
+            # If the section contains only tables (dicts with keys other than 'html'), let's NOT merge into one big div yet,
+            # or handle it in app.js.
+            # Actually, the existing logic for Intro/Scope/Ref assumes they are lists of blocks.
+            
+            if section == "VFX Types":
+                continue # Keep structured for now to allow better rendering
+                
             merged_html = f"<div class='text-block-{section.lower().replace(' ', '-')}'>" + "".join([str(x["html"]) for x in output[section] if "html" in x]) + "</div>"
             output[section] = [{"html": merged_html}]
             
@@ -413,6 +428,7 @@ def parse_google_doc_html(html_path, output_css_path=None):
         "publishDate": publish_date,
         "Introduction": output["Introduction"],
         "Scope Definitions": output["Scope Definitions"],
+        "VFX Types": output.get("VFX Types", []),
         "Data Sets": output["Data Sets"],
         "Directory Structure": output["Directory Structure"],
         "Reference Docs": output["Reference Docs"],

@@ -34,6 +34,20 @@
             "Digital and artistic assets": "Digital and artistic assets refer to computer-generated elements like 3D models, matte paintings, visual effects layers. and animation files. These are created by VFX artists and inserted into scenes to realize effects, creatures, environments, or otherwise enhance or alter the filmed footage digitally."
         }
     ],
+    "VFX Types": [
+        {
+            "html": "<p>Within the <a href=\"https://ves-on-set-data.org/dashboard/vis.html\">visualisations</a>\u00a0and <a href=\"https://ves-on-set-data.org/on-set/dashboard/?tab=Data+Sets\">interactive</a>\u00a0tools, you will see filters for VFX Types, this is a way of reducing the number of data sets based on the complexity of the production.</p>"
+        },
+        {
+            "Basic 2D VFX": "2-D blue screen, wire or rig removal, etc.",
+            "Digital Matte Painting": "Can include 3-D environments, but could be 2D, does not include characters.",
+            "Character VFX": "As above, but includes digital 3-D animated characters.",
+            "Motion Capture": "Similar to Character VFX, but including substantial motion capture",
+            "Complex VFX": "Can include all of the above, but often requires additional data sets to handle more complex environments.",
+            "Virtual Production / ICVFX": "Data sets required for virtual production/ICVFX, can include much of the above, but additionally has a real time component.",
+            "Real Time": "For real time graphics (e.g. games, or immersive entertainment)."
+        }
+    ],
     "Data Sets": [
         {
             "title": "0. Common Parameters",
@@ -78,7 +92,6 @@
                             ],
                             "VFXTypes": [
                                 "Basic 2D VFX",
-                                "Basic 3D VFX",
                                 "Character VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
@@ -127,7 +140,6 @@
                             ],
                             "VFXTypes": [
                                 "Basic 2D VFX",
-                                "Basic 3D VFX",
                                 "Character VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
@@ -169,7 +181,6 @@
                             ],
                             "VFXTypes": [
                                 "Basic 2D VFX",
-                                "Basic 3D VFX",
                                 "Character VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
@@ -212,7 +223,6 @@
                             ],
                             "VFXTypes": [
                                 "Basic 2D VFX",
-                                "Basic 3D VFX",
                                 "Character VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
@@ -252,7 +262,6 @@
                             ],
                             "VFXTypes": [
                                 "Basic 2D VFX",
-                                "Basic 3D VFX",
                                 "Character VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
@@ -326,7 +335,6 @@
                                 "VFX Post Production Vendor"
                             ],
                             "VFXTypes": [
-                                "Basic 3D VFX",
                                 "Complex VFX",
                                 "Motion Capture",
                                 "Virtual Production"
@@ -361,7 +369,6 @@
                                 "VFX Post Production Vendor"
                             ],
                             "VFXTypes": [
-                                "Basic 3D VFX",
                                 "Character VFX",
                                 "Complex VFX",
                                 "Motion Capture",
@@ -399,7 +406,6 @@
                                 "VFX Post Production Vendor"
                             ],
                             "VFXTypes": [
-                                "Basic 3D VFX",
                                 "Complex VFX"
                             ]
                         }
@@ -441,7 +447,6 @@
                             ],
                             "VFXTypes": [
                                 "Basic 2D VFX",
-                                "Basic 3D VFX",
                                 "Character VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
@@ -574,7 +579,6 @@
                             ],
                             "VFXTypes": [
                                 "Basic 2D VFX",
-                                "Basic 3D VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
                                 "Motion Capture",
@@ -612,7 +616,6 @@
                             ],
                             "VFXTypes": [
                                 "Basic 2D VFX",
-                                "Basic 3D VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
                                 "Motion Capture",
@@ -646,7 +649,6 @@
                             ],
                             "VFXTypes": [
                                 "Basic 2D VFX",
-                                "Basic 3D VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
                                 "Virtual Production",
@@ -681,7 +683,6 @@
                             ],
                             "VFXTypes": [
                                 "Basic 2D VFX",
-                                "Basic 3D VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
                                 "Virtual Production",
@@ -714,7 +715,6 @@
                                 "VFX Post Production Vendor"
                             ],
                             "VFXTypes": [
-                                "Basic 3D VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
                                 "Virtual Production",
@@ -750,7 +750,6 @@
                                 "Virtual Production Department"
                             ],
                             "VFXTypes": [
-                                "Basic 3D VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
                                 "Virtual Production",
@@ -782,7 +781,6 @@
                                 "VFX Post Production Vendor"
                             ],
                             "VFXTypes": [
-                                "Basic 3D VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
                                 "Virtual Production",
@@ -813,7 +811,6 @@
                                 "VFX Post Production Vendor"
                             ],
                             "VFXTypes": [
-                                "Basic 3D VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
                                 "Virtual Production",
@@ -855,7 +852,6 @@
                                 "Vendor Creating LED Volume Content"
                             ],
                             "VFXTypes": [
-                                "Basic 3D VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
                                 "Virtual Production",
@@ -889,7 +885,6 @@
                                 "VFX Post Production Vendor"
                             ],
                             "VFXTypes": [
-                                "Basic 3D VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
                                 "Virtual Production",
@@ -926,7 +921,6 @@
                                 "VFX Post Production Vendor"
                             ],
                             "VFXTypes": [
-                                "Basic 3D VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
                                 "Virtual Production",
@@ -962,7 +956,6 @@
                                 "Virtual Production Department / Icvfx"
                             ],
                             "VFXTypes": [
-                                "Basic 3D VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
                                 "Virtual Production",
@@ -1029,7 +1022,6 @@
                             ],
                             "VFXTypes": [
                                 "Basic 2D VFX",
-                                "Basic 3D VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
                                 "Virtual Production",
@@ -1102,7 +1094,6 @@
                                 "VFX Post Production Vendor"
                             ],
                             "VFXTypes": [
-                                "Basic 3D VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
                                 "Virtual Production",
@@ -1219,7 +1210,6 @@
                             ],
                             "VFXTypes": [
                                 "Basic 2D VFX",
-                                "Basic 3D VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
                                 "Motion Capture",
@@ -1270,7 +1260,6 @@
                             ],
                             "VFXTypes": [
                                 "Basic 2D VFX",
-                                "Basic 3D VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
                                 "Motion Capture",
@@ -1310,7 +1299,6 @@
                             ],
                             "VFXTypes": [
                                 "Basic 2D VFX",
-                                "Basic 3D VFX",
                                 "Character VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
@@ -1532,7 +1520,6 @@
                             ],
                             "VFXTypes": [
                                 "Basic 2D VFX",
-                                "Basic 3D VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
                                 "Motion Capture",
@@ -2038,7 +2025,6 @@
                                 "VFX Post Production Vendor"
                             ],
                             "VFXTypes": [
-                                "Basic 3D VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
                                 "Virtual Production",
@@ -2076,7 +2062,6 @@
                                 "VFX Production Team"
                             ],
                             "VFXTypes": [
-                                "Basic 3D VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
                                 "Virtual Production",
@@ -2125,7 +2110,6 @@
                             ],
                             "VFXTypes": [
                                 "Basic 2D VFX",
-                                "Basic 3D VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
                                 "Virtual Production",
@@ -2178,7 +2162,6 @@
                             ],
                             "VFXTypes": [
                                 "Basic 2D VFX",
-                                "Basic 3D VFX",
                                 "Character VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
@@ -2219,7 +2202,6 @@
                             ],
                             "VFXTypes": [
                                 "Basic 2D VFX",
-                                "Basic 3D VFX",
                                 "Character VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
@@ -2258,7 +2240,6 @@
                                 "VFX Post Production Vendor"
                             ],
                             "VFXTypes": [
-                                "Basic 3D VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
                                 "Virtual Production",
@@ -2298,7 +2279,6 @@
                                 "VFX Production Team"
                             ],
                             "VFXTypes": [
-                                "Basic 3D VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
                                 "Virtual Production",
@@ -2347,7 +2327,6 @@
                             ],
                             "VFXTypes": [
                                 "Basic 2D VFX",
-                                "Basic 3D VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
                                 "Motion Capture",
@@ -2400,7 +2379,6 @@
                             ],
                             "VFXTypes": [
                                 "Basic 2D VFX",
-                                "Basic 3D VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
                                 "Motion Capture",
@@ -2430,7 +2408,6 @@
                             ],
                             "VFXTypes": [
                                 "Basic 2D VFX",
-                                "Basic 3D VFX",
                                 "Character VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
@@ -2476,7 +2453,6 @@
                             ],
                             "VFXTypes": [
                                 "Basic 2D VFX",
-                                "Basic 3D VFX",
                                 "Character VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
@@ -2517,7 +2493,6 @@
                             ],
                             "VFXTypes": [
                                 "Basic 2D VFX",
-                                "Basic 3D VFX",
                                 "Character VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",
@@ -2556,7 +2531,6 @@
                             ],
                             "VFXTypes": [
                                 "Basic 2D VFX",
-                                "Basic 3D VFX",
                                 "Character VFX",
                                 "Digital Matte Painting",
                                 "Complex VFX",

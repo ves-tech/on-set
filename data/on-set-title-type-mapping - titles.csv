@@ -1,67 +1,67 @@
-Number,Title,Basic 2D VFX,Basic 3D VFX,Character VFX,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
-1.1,Manual Camera Data Collection,Basic 2D VFX,Basic 3D VFX,Character VFX,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
-1.2,Camera Type & Model,Basic 2D VFX,Basic 3D VFX,Character VFX,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
-1.3,Per take Sensor Metadata,Basic 2D VFX,Basic 3D VFX,Character VFX,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
-1.4,Per Camera Lens Specifications,Basic 2D VFX,Basic 3D VFX,Character VFX,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
-1.5,Lens Encoder Tracking Data,Basic 2D VFX,Basic 3D VFX,Character VFX,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
-1.6,Camera Depth Information,,,,,Complex VFX,Motion Capture,Virtual Production,Real time
-2.1,Multiple Witness Cameras,,Basic 3D VFX,,,Complex VFX,Motion Capture,Virtual Production,
-2.2,Overhead & Wide-Angle BTS Coverage,,Basic 3D VFX,Character VFX,,Complex VFX,Motion Capture,Virtual Production,
-2.3,Real-World Depth Information,,Basic 3D VFX,,,Complex VFX,,,
-3.1,Camera Reports,Basic 2D VFX,Basic 3D VFX,Character VFX,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
-3.2,Clips Report,,,,,Complex VFX,Motion Capture,Virtual Production,
-3.3,Shooting Day Report,,,,,Complex VFX,Motion Capture,Virtual Production,
-3.4,Sound Report,,,,,Complex VFX,Motion Capture,Virtual Production,Real time
-3.5,Schedule and One-Liner,Basic 2D VFX,Basic 3D VFX,,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
-3.6,Script Supervisor Notes,Basic 2D VFX,Basic 3D VFX,,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,
-4.1,Colour Charts,Basic 2D VFX,Basic 3D VFX,,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
-4.2,HDRIs,Basic 2D VFX,Basic 3D VFX,,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
-4.3,Lighting Reference Objects/Props,,Basic 3D VFX,,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
-4.4,DMX/Lighting Control Metadata,,Basic 3D VFX,,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
-4.5,Light Sources & Colour Temperature,,Basic 3D VFX,,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
-4.6,Shadow Behavior & Falloff,,Basic 3D VFX,,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
-5.1,LIDAR Scans / Texture Photography,,Basic 3D VFX,,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
-5.2,Prop Scans,,Basic 3D VFX,,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
-5.3,Photogrammetry,,Basic 3D VFX,,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
-5.4,"NERFs, Gaussian Splats",,Basic 3D VFX,,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
-5.5,"Face Scans, Body Scans",,,Character VFX,,Complex VFX,Motion Capture,,
-5.6,Set Reference Photography,Basic 2D VFX,Basic 3D VFX,,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
-5.7,"Costume, Face Marker, and T-Pose Reference",,,,,Complex VFX,Motion Capture,,
-5.8,"Reference of Vehicles, Props, Production Locations",,Basic 3D VFX,,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
-6.1,Camera Tech Specs,,,,,Complex VFX,Motion Capture,Virtual Production,Real time
-6.2,DIT Specs,,,,,Complex VFX,,Virtual Production,Real time
-6.3,Lens Specification,Basic 2D VFX,Basic 3D VFX,,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
-7.1,Previz/Techviz,Basic 2D VFX,Basic 3D VFX,,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
-7.2,"Concept Art, Lookdev, Character Designs, R&D, Storyboards",Basic 2D VFX,Basic 3D VFX,Character VFX,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
-8.1,Mocap Suit Tracking,,,,,Complex VFX,Motion Capture,,
-8.2,Performance Capture Facial Tracking,,,,,Complex VFX,Motion Capture,,
-8.3,Hand/Finger Tracking,,,,,Complex VFX,Motion Capture,,
-8.4,Raw Animation Data & Retargeting Settings,,,,,Complex VFX,Motion Capture,,
-8.5,Motion Capture Volume Data,,,,,Complex VFX,Motion Capture,,
-9.1,Camera Tracking Data,Basic 2D VFX,Basic 3D VFX,,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
-9.2,Timecode Sync & Genlock,,,,,Complex VFX,Motion Capture,Virtual Production,Real time
-9.3,IMU Data,,,,,Complex VFX,Motion Capture,Virtual Production,Real time
-10.1,Volume Layout & Dimensions,,,,,Complex VFX,,Virtual Production,Real time
-10.2,Display Frustum Calibration,,,,,,,Virtual Production,Real time
-10.3,Colour Profile & Brightness Settings,,,,,Complex VFX,,Virtual Production,Real time
-10.4,Latency Data,,,,,Complex VFX,,Virtual Production,Real time
-10.5,Plate vs. Real-Time Rendered Assets,,,,,Complex VFX,,Virtual Production,Real time
-11.1,Virtual Production Log and Continuity Notes,,,,,Complex VFX,,Virtual Production,Real time
-11.2,Virtual Production Operator Metadata,,,,,Complex VFX,,Virtual Production,Real time
-11.3,On-Set Real-Time Adjustments,,,,,Complex VFX,,Virtual Production,Real time
-12.1,Sound Slate & Timecode Alignment,,,,,Complex VFX,Motion Capture,Virtual Production,Real time
-12.2,Spatial Audio Tracking Metadata,,,,,Complex VFX,,Virtual Production,Real time
-12.3,Lip sync and character audio,,,Character VFX,,Complex VFX,Motion Capture,Virtual Production,Real time
-13.1,"Physical Props, Costumes",,Basic 3D VFX,,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
-13.2,Mudmaps,,Basic 3D VFX,,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
-13.3,"Storyboards, Previz, Techviz, Stuntviz",Basic 3D VFX,Basic 3D VFX,,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
-13.4,Art Department Assets,Basic 2D VFX,Basic 3D VFX,Character VFX,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
-14.1,"Previz, Techviz, Concept Art",Basic 2D VFX,Basic 3D VFX,Character VFX,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
-14.2,Lens Grid and Reference Specs,,Basic 3D VFX,,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
-15.1,Production Tracking Systems,,Basic 3D VFX,,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
-15.2,Descriptive File Naming,Basic 2D VFX,Basic 3D VFX,,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
-15.3,Review Tools,Basic 2D VFX,Basic 3D VFX,,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
-15.4,Show Technical Specifications,Basic 2D VFX,Basic 3D VFX,Character VFX,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
-16.1,Naming Conventions and Metadata,Basic 2D VFX,Basic 3D VFX,Character VFX,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
-16.2,Plate and Editorial Reference Media,Basic 2D VFX,Basic 3D VFX,Character VFX,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
-16.3,VFX Shot Delivery,Basic 2D VFX,Basic 3D VFX,Character VFX,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
+Number,Title,Basic 2D VFX,Character VFX,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
+1.1,Manual Camera Data Collection,Basic 2D VFX,Character VFX,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
+1.2,Camera Type & Model,Basic 2D VFX,Character VFX,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
+1.3,Per take Sensor Metadata,Basic 2D VFX,Character VFX,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
+1.4,Per Camera Lens Specifications,Basic 2D VFX,Character VFX,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
+1.5,Lens Encoder Tracking Data,Basic 2D VFX,Character VFX,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
+1.6,Camera Depth Information,,,,Complex VFX,Motion Capture,Virtual Production,Real time
+2.1,Multiple Witness Cameras,,,,Complex VFX,Motion Capture,Virtual Production,
+2.2,Overhead & Wide-Angle BTS Coverage,,Character VFX,,Complex VFX,Motion Capture,Virtual Production,
+2.3,Real-World Depth Information,,,,Complex VFX,,,
+3.1,Camera Reports,Basic 2D VFX,Character VFX,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
+3.2,Clips Report,,,,Complex VFX,Motion Capture,Virtual Production,
+3.3,Shooting Day Report,,,,Complex VFX,Motion Capture,Virtual Production,
+3.4,Sound Report,,,,Complex VFX,Motion Capture,Virtual Production,Real time
+3.5,Schedule and One-Liner,Basic 2D VFX,,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
+3.6,Script Supervisor Notes,Basic 2D VFX,,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,
+4.1,Colour Charts,Basic 2D VFX,,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
+4.2,HDRIs,Basic 2D VFX,,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
+4.3,Lighting Reference Objects/Props,,,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
+4.4,DMX/Lighting Control Metadata,,,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
+4.5,Light Sources & Colour Temperature,,,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
+4.6,Shadow Behavior & Falloff,,,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
+5.1,LIDAR Scans / Texture Photography,,,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
+5.2,Prop Scans,,,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
+5.3,Photogrammetry,,,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
+5.4,"NERFs, Gaussian Splats",,,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
+5.5,"Face Scans, Body Scans",,Character VFX,,Complex VFX,Motion Capture,,
+5.6,Set Reference Photography,Basic 2D VFX,,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
+5.7,"Costume, Face Marker, and T-Pose Reference",,,,Complex VFX,Motion Capture,,
+5.8,"Reference of Vehicles, Props, Production Locations",,,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
+6.1,Camera Tech Specs,,,,Complex VFX,Motion Capture,Virtual Production,Real time
+6.2,DIT Specs,,,,Complex VFX,,Virtual Production,Real time
+6.3,Lens Specification,Basic 2D VFX,,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
+7.1,Previz/Techviz,Basic 2D VFX,,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
+7.2,"Concept Art, Lookdev, Character Designs, R&D, Storyboards",Basic 2D VFX,Character VFX,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
+8.1,Mocap Suit Tracking,,,,Complex VFX,Motion Capture,,
+8.2,Performance Capture Facial Tracking,,,,Complex VFX,Motion Capture,,
+8.3,Hand/Finger Tracking,,,,Complex VFX,Motion Capture,,
+8.4,Raw Animation Data & Retargeting Settings,,,,Complex VFX,Motion Capture,,
+8.5,Motion Capture Volume Data,,,,Complex VFX,Motion Capture,,
+9.1,Camera Tracking Data,Basic 2D VFX,,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
+9.2,Timecode Sync & Genlock,,,,Complex VFX,Motion Capture,Virtual Production,Real time
+9.3,IMU Data,,,,Complex VFX,Motion Capture,Virtual Production,Real time
+10.1,Volume Layout & Dimensions,,,,Complex VFX,,Virtual Production,Real time
+10.2,Display Frustum Calibration,,,,,,Virtual Production,Real time
+10.3,Colour Profile & Brightness Settings,,,,Complex VFX,,Virtual Production,Real time
+10.4,Latency Data,,,,Complex VFX,,Virtual Production,Real time
+10.5,Plate vs. Real-Time Rendered Assets,,,,Complex VFX,,Virtual Production,Real time
+11.1,Virtual Production Log and Continuity Notes,,,,Complex VFX,,Virtual Production,Real time
+11.2,Virtual Production Operator Metadata,,,,Complex VFX,,Virtual Production,Real time
+11.3,On-Set Real-Time Adjustments,,,,Complex VFX,,Virtual Production,Real time
+12.1,Sound Slate & Timecode Alignment,,,,Complex VFX,Motion Capture,Virtual Production,Real time
+12.2,Spatial Audio Tracking Metadata,,,,Complex VFX,,Virtual Production,Real time
+12.3,Lip sync and character audio,,Character VFX,,Complex VFX,Motion Capture,Virtual Production,Real time
+13.1,"Physical Props, Costumes",,,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
+13.2,Mudmaps,,,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
+13.3,"Storyboards, Previz, Techviz, Stuntviz",Basic 3D VFX,,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
+13.4,Art Department Assets,Basic 2D VFX,Character VFX,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
+14.1,"Previz, Techviz, Concept Art",Basic 2D VFX,Character VFX,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
+14.2,Lens Grid and Reference Specs,,,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
+15.1,Production Tracking Systems,,,Digital Matte Painting,Complex VFX,,Virtual Production,Real time
+15.2,Descriptive File Naming,Basic 2D VFX,,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
+15.3,Review Tools,Basic 2D VFX,,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
+15.4,Show Technical Specifications,Basic 2D VFX,Character VFX,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
+16.1,Naming Conventions and Metadata,Basic 2D VFX,Character VFX,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
+16.2,Plate and Editorial Reference Media,Basic 2D VFX,Character VFX,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time
+16.3,VFX Shot Delivery,Basic 2D VFX,Character VFX,Digital Matte Painting,Complex VFX,Motion Capture,Virtual Production,Real time

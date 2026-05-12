@@ -439,11 +439,63 @@ h1 {
 .text-content {
     color: var(--text-secondary);
     line-height: 1.6;
+    font-size: 1.1rem;
+}
+
+/* VFX Types Table */
+.vfx-types-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+    background: var(--card-bg);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+.vfx-types-table th, 
+.vfx-types-table td {
+    padding: 1.25rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.vfx-types-table th {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--accent-color);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+}
+
+.vfx-types-table td:first-child {
+    width: 30%;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.vfx-types-table tr:last-child td {
+    border-bottom: none;
+}
+
+.vfx-types-table tr:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.text-content {
     max-width: 800px;
     width: 100%;
     margin: 0 auto;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    font-size: 1.1rem;
     grid-column: 1 / -1 !important;
     padding: 0 1rem;
+}
+
+.text-content p {
+    margin-bottom: 1.5rem;
 }
 
 .text-content a {
