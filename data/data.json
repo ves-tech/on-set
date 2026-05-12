@@ -2559,6 +2559,15 @@
                             "Consumer": [
                                 "Dailies Vendor",
                                 "Pull Vendor"
+                            ],
+                            "VFXTypes": [
+                                "Basic 2D VFX",
+                                "Character VFX",
+                                "Digital Matte Painting",
+                                "Complex VFX",
+                                "Motion Capture",
+                                "Virtual Production",
+                                "Real time"
                             ]
                         }
                     ]
@@ -2581,6 +2590,15 @@
                             "Consumer": [
                                 "Editorial",
                                 "VFX Editorial"
+                            ],
+                            "VFXTypes": [
+                                "Basic 2D VFX",
+                                "Character VFX",
+                                "Digital Matte Painting",
+                                "Complex VFX",
+                                "Motion Capture",
+                                "Virtual Production",
+                                "Real time"
                             ]
                         }
                     ]
