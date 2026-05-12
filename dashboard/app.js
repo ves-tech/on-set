@@ -365,6 +365,51 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // VFX Types (Table form)
+        if (sectionName === "VFX Types") {
+            const container = document.createElement('div');
+            container.className = 'text-content';
+            container.style.gridColumn = '1 / -1';
+            
+            const table = document.createElement('table');
+            table.className = 'vfx-types-table';
+            
+            const thead = document.createElement('thead');
+            thead.innerHTML = '<tr><th>VFX Type</th><th>Description</th></tr>';
+            table.appendChild(thead);
+            
+            const tbody = document.createElement('tbody');
+            
+            data.forEach(item => {
+                if (item.html) {
+                    const div = document.createElement('div');
+                    div.className = 'intro-block';
+                    div.style.marginBottom = '2rem';
+                    div.innerHTML = item.html;
+                    container.appendChild(div);
+                } else {
+                    Object.entries(item).forEach(([key, value]) => {
+                        if (key === 'html') return;
+                        const tr = document.createElement('tr');
+                        const tdKey = document.createElement('td');
+                        tdKey.textContent = key;
+                        
+                        const tdVal = document.createElement('td');
+                        tdVal.textContent = value;
+                        
+                        tr.appendChild(tdKey);
+                        tr.appendChild(tdVal);
+                        tbody.appendChild(tr);
+                    });
+                }
+            });
+            
+            table.appendChild(tbody);
+            container.appendChild(table);
+            dom.grid.appendChild(container);
+            return;
+        }
+
         // Scope Definitions (Grid + Cards)
         if (sectionName === "Scope Definitions") {
             data.forEach(item => {
