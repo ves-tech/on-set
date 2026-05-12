@@ -250,6 +250,14 @@ def parse_google_doc_html(html_path, output_css_path=None):
                              real_url = urllib.parse.unquote(real_url)
                              a_tag['href'] = real_url
 
+                 # Special replacement for the embedded image in Introduction
+                 if current_h1_obj["title"] == "Introduction":
+                     for img in el.find_all('img'):
+                         img['src'] = "https://ves-on-set-data.org/dashboard/sankey_vis.jpg"
+                         # Wrap the image in a link to the visualization page
+                         new_a = soup.new_tag("a", href="https://ves-on-set-data.org/dashboard/vis.html")
+                         img.wrap(new_a)
+
                  content = el.decode_contents().strip()
                  
                  # Check for junk content to ignore/stop
