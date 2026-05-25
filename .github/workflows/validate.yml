@@ -1,0 +1,34 @@
+name: Validate data.json
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Regenerate data artifacts from doc_export.html
+        run: python data/convert_doc.py
+
+      - name: Check committed artifacts match regenerated output
+        run: |
+          git diff --exit-code \
+            data/data.json \
+            data/directory_data.json \
+            data/directory_structure.yaml \
+            dashboard/doc_styles.css
+
+      - name: Validate data.json against schema
+        run: python data/validate.py

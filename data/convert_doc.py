@@ -197,6 +197,8 @@ def parse_google_doc_html(html_path, output_css_path=None):
                 current_h2_obj = None
                 
         elif el.name == 'h2':
+            if not text:
+                continue
             if current_h1_obj and not current_h1_obj.get("special"):
                 current_h2_obj = {
                     "title": text,
@@ -204,7 +206,7 @@ def parse_google_doc_html(html_path, output_css_path=None):
                 }
                 current_h1_obj["subsections"].append(current_h2_obj)
             else:
-                current_h2_obj = None 
+                current_h2_obj = None
 
         elif el.name in ['p', 'ul', 'ol']:
             if current_h1_obj and current_h1_obj.get("special"):
