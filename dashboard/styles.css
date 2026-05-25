@@ -72,6 +72,26 @@ body {
     opacity: 0.8;
 }
 
+.header-pdf-link {
+    margin-left: auto;
+    /* Push to right */
+    flex-shrink: 0;
+    align-self: center;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--accent-color);
+    text-decoration: none;
+    border: 1px solid var(--accent-color);
+    border-radius: 4px;
+    padding: 0.5rem 0.9rem;
+    transition: background 0.2s, color 0.2s;
+}
+
+.header-pdf-link:hover {
+    background: var(--accent-color);
+    color: var(--bg-color);
+}
+
 .app-container {
     display: flex;
     flex: 1;
@@ -599,7 +619,8 @@ h1 {
     #filter-container,
     .tree-controls,
     .header-banner,
-    .header-logo {
+    .header-logo,
+    .header-pdf-link {
         display: none !important;
     }
 
